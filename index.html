@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Serviette — Real-time feedback for restaurants</title>
-<meta name="description" content="Serviette turns a single guest tap into a live alert your team can act on in minutes — not a review discovered three days later.">
+<title>Serviette — Service Intelligence & Real-Time Hospitality Feedback</title>
+<meta name="description" content="Serviette turns a single table tap into a live floor alert and staff recognition — so service issues get fixed in minutes, not discovered days later on Google Reviews.">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,11 +24,13 @@
     <nav class="nav-links" id="navLinks">
       <a href="how-it-works.html">How It Works</a>
       <a href="features.html">Features</a>
+      <a href="dashboard.html" style="font-weight:700; color:var(--text);">Manager Portal</a>
       <a href="packages.html">Pricing</a>
       <a href="about-us.html">About</a>
       <a href="contact.html">Contact</a>
     </nav>
     <div class="nav-cta">
+      <a class="btn btn-ghost" href="feedback.html?table=04" target="_blank" rel="noopener" style="padding: 0.55rem 0.9rem; font-size: 0.85rem;">Table Demo ↗</a>
       <a class="btn btn-primary" href="https://calendar.app.google/LqZYC1YsDhPSSBzCA" target="_blank" rel="noopener">Book a walkthrough</a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
@@ -41,67 +43,64 @@
   <section class="hero" id="top">
     <div class="wrap hero-grid">
       <div>
-        <p class="eyebrow">SERVICE INTELLIGENCE FOR RESTAURANTS</p>
-        <h1>Real-time feedback. Instant action. Happier guests.</h1>
-        <p class="hero-sub">Serviette turns a single tap at the table into a live alert for your team — so a slow drink order or a cold dish gets fixed while the guest is still there, not discovered three days later in a review.</p>
+        <p class="eyebrow">AUSTRALIAN HOSPITALITY SERVICE INTELLIGENCE</p>
+        <h1>Real-time feedback. Standout staff. Zero review surprises.</h1>
+        <p class="hero-sub">In Australia, servers don't rely on tips — meaning great service often goes uncelebrated, while one bad table becomes a damaging 1-star Google review. Serviette turns a 15-second table tap into live floor alerts, automated staff recognition, and instant table rewards.</p>
         <div class="hero-ctas">
-          <a class="btn btn-primary" href="https://calendar.app.google/LqZYC1YsDhPSSBzCA" target="_blank" rel="noopener">Book a walkthrough</a>
-          <a class="btn btn-ghost" href="how-it-works.html">See how it works</a>
+          <a class="btn btn-primary" href="dashboard.html">Explore Live Dashboard</a>
+          <a class="btn btn-ghost" href="feedback.html?table=04" target="_blank" rel="noopener">Test Guest Experience ↗</a>
         </div>
-        <p class="hero-fine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> First month free · No contract, no card required</p>
+        <p class="hero-fine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> First month free · No contract, no hardware required</p>
       </div>
 
       <div class="reveal">
-        <div class="mock-card">
-          <div class="mock-topbar">
-            <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
-            <span class="mock-url">app.serviette.com.au/dashboard</span>
-          </div>
-          <div class="mock-body">
-            <div class="mock-head">
-              <strong>Live Feed</strong>
-              <span class="live-badge">LIVE</span>
+        <a href="dashboard.html" style="text-decoration:none; color:inherit; display:block;" title="Click to view interactive Manager Portal">
+          <div class="mock-card">
+            <div class="mock-topbar">
+              <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+              <span class="mock-url">app.serviette.com.au/dashboard ↗</span>
             </div>
-            <div class="mock-stats">
-              <div class="mock-stat"><div class="num up">8.6</div><div class="lbl">NPS today ▲0.4</div></div>
-              <div class="mock-stat"><div class="num">142</div><div class="lbl">Responses today</div></div>
-            </div>
-            <div class="mock-chart" aria-hidden="true">
-              <span style="height:40%"></span><span style="height:65%"></span><span style="height:50%"></span>
-              <span style="height:80%"></span><span style="height:60%"></span><span style="height:90%"></span>
-              <span style="height:70%"></span><span style="height:95%"></span>
-            </div>
-            <div class="mock-feed">
-              <div class="feed-frame">
-                <div class="feed-track">
-                  <div class="feed-row"><span class="feed-table">TABLE 12</span><span class="feed-comment">"Quick tonight, thank you!"</span><span class="feed-score g">9/10</span></div>
-                  <div class="feed-row"><span class="feed-table">TABLE 04</span><span class="feed-comment">"Waited 20 min for drinks"</span><span class="feed-score r">3/10</span></div>
-                  <div class="feed-row"><span class="feed-table">TABLE 19</span><span class="feed-comment">"Great recs from Sam"</span><span class="feed-score g">8/10</span></div>
-                  <div class="feed-row"><span class="feed-table">TABLE 07</span><span class="feed-comment">"Order came out mixed up"</span><span class="feed-score r">5/10</span></div>
-                  <div class="feed-row"><span class="feed-table">TABLE 02</span><span class="feed-comment">"Perfect as always"</span><span class="feed-score g">10/10</span></div>
-                  <div class="feed-row"><span class="feed-table">TABLE 09</span><span class="feed-comment">"Good but a bit loud"</span><span class="feed-score a">7/10</span></div>
-                  <div class="feed-row" aria-hidden="true"><span class="feed-table">TABLE 12</span><span class="feed-comment">"Quick tonight, thank you!"</span><span class="feed-score g">9/10</span></div>
-                  <div class="feed-row" aria-hidden="true"><span class="feed-table">TABLE 04</span><span class="feed-comment">"Waited 20 min for drinks"</span><span class="feed-score r">3/10</span></div>
-                  <div class="feed-row" aria-hidden="true"><span class="feed-table">TABLE 19</span><span class="feed-comment">"Great recs from Sam"</span><span class="feed-score g">8/10</span></div>
-                  <div class="feed-row" aria-hidden="true"><span class="feed-table">TABLE 07</span><span class="feed-comment">"Order came out mixed up"</span><span class="feed-score r">5/10</span></div>
-                  <div class="feed-row" aria-hidden="true"><span class="feed-table">TABLE 02</span><span class="feed-comment">"Perfect as always"</span><span class="feed-score g">10/10</span></div>
-                  <div class="feed-row" aria-hidden="true"><span class="feed-table">TABLE 09</span><span class="feed-comment">"Good but a bit loud"</span><span class="feed-score a">7/10</span></div>
+            <div class="mock-body">
+              <div class="mock-head">
+                <strong>Live Floor Feed</strong>
+                <span class="live-badge">LIVE PULSE</span>
+              </div>
+              <div class="mock-stats">
+                <div class="mock-stat"><div class="num up">4.08★</div><div class="lbl">Rating (Sydney Avg 3.84)</div></div>
+                <div class="mock-stat"><div class="num up">Alice</div><div class="lbl">Top Waiter · Bonus Eligible</div></div>
+              </div>
+              <div class="mock-chart" aria-hidden="true">
+                <span style="height:40%"></span><span style="height:65%"></span><span style="height:50%"></span>
+                <span style="height:80%"></span><span style="height:60%"></span><span style="height:90%"></span>
+                <span style="height:70%"></span><span style="height:95%"></span>
+              </div>
+              <div class="mock-feed">
+                <div class="feed-frame">
+                  <div class="feed-track">
+                    <div class="feed-row"><span class="feed-table">TABLE 04</span><span class="feed-comment">"Alice was so fast & friendly!"</span><span class="feed-score g">5/5 ★</span></div>
+                    <div class="feed-row"><span class="feed-table">TABLE 12</span><span class="feed-comment">"Waited 20 min for drink order"</span><span class="feed-score r">2/5 ★</span></div>
+                    <div class="feed-row"><span class="feed-table">TABLE 19</span><span class="feed-comment">"Spun the wheel & won dessert!"</span><span class="feed-score g">5/5 ★</span></div>
+                    <div class="feed-row"><span class="feed-table">TABLE 07</span><span class="feed-comment">"Good meal but slightly slow"</span><span class="feed-score a">3/5 ★</span></div>
+                    <div class="feed-row"><span class="feed-table">TABLE 02</span><span class="feed-comment">"Food was warm and perfect"</span><span class="feed-score g">5/5 ★</span></div>
+                    <div class="feed-row" aria-hidden="true"><span class="feed-table">TABLE 04</span><span class="feed-comment">"Alice was so fast & friendly!"</span><span class="feed-score g">5/5 ★</span></div>
+                    <div class="feed-row" aria-hidden="true"><span class="feed-table">TABLE 12</span><span class="feed-comment">"Waited 20 min for drink order"</span><span class="feed-score r">2/5 ★</span></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </a>
       </div>
     </div>
   </section>
 
   <div class="stats-bar reveal">
     <div class="wrap">
-      <p class="eyebrow">RESULTS SO FAR</p>
+      <p class="eyebrow">AUSTRALIAN VENUE RESULTS</p>
       <div class="stats-row">
-        <div class="stat"><div class="stat-num blue">+28%</div><div class="stat-label">Happier guests</div></div>
-        <div class="stat"><div class="stat-num green">35%</div><div class="stat-label">Empowered teams</div></div>
-        <div class="stat"><div class="stat-num orange">2×</div><div class="stat-label">Smarter decisions</div></div>
+        <div class="stat"><div class="stat-num blue">-80%</div><div class="stat-label">Public 1-star reviews intercepted</div></div>
+        <div class="stat"><div class="stat-num green">100%</div><div class="stat-label">Staff floor recognition coverage</div></div>
+        <div class="stat"><div class="stat-num orange">15 sec</div><div class="stat-label">Average diner feedback time</div></div>
       </div>
     </div>
   </div>
@@ -109,28 +108,28 @@
   <section class="section-pad" id="how">
     <div class="wrap">
       <div class="section-head reveal">
-        <p class="eyebrow">HOW IT WORKS</p>
-        <h2>Three steps, no extra work for guests.</h2>
-        <p>From the tap at the table to the fix on the floor, the whole loop closes in minutes.</p>
+        <p class="eyebrow">THE GUEST & FLOOR LOOP</p>
+        <h2>Three frictionless steps. No apps or logins.</h2>
+        <p>From the table scan to staff recognition, the feedback loop closes before the diner walks out.</p>
       </div>
       <div class="steps reveal">
         <div class="step">
           <div class="step-num">01</div>
-          <h3>Ask</h3>
-          <p>A quick tap at checkout, mid-meal, or post-dinner shares how the visit is going. No app, no login, no printed card.</p>
+          <h3>Scan & Spin</h3>
+          <p>Guests scan a branded QR stand, rate their waiter in 15 seconds, and unlock a gamified <strong>Spin-the-Wheel</strong> reward (free coffee, dessert, or 10% off).</p>
         </div>
         <div class="step">
           <div class="step-num">02</div>
-          <h3>See it live</h3>
-          <p>Scores, comments, and sentiment land on your dashboard the moment a guest taps.</p>
+          <h3>Live Manager Pulse</h3>
+          <p>Feedback logs automatically into Google Sheets and your executive console — highlighting table number, server name, order pace, and sentiment.</p>
         </div>
         <div class="step">
           <div class="step-num">03</div>
-          <h3>Act</h3>
-          <p>An alert goes straight to whoever's on the floor — while there's still time to help.</p>
+          <h3>Reward & Rectify</h3>
+          <p>Fix cold dishes or slow drinks at Table 12 before they leave, and reward standout servers like Alice with data-backed bonuses.</p>
         </div>
       </div>
-      <a class="section-link" href="how-it-works.html">See the full picture, including what happens when nobody's watching <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
+      <a class="section-link" href="how-it-works.html">See the full walkthrough, including manager alert escalation <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
     </div>
   </section>
 
@@ -138,55 +137,55 @@
     <div class="wrap">
       <div class="section-head reveal">
         <p class="eyebrow">FEATURES</p>
-        <h2>What makes Serviette different</h2>
-        <p>A taste of what's inside — the full feature set covers a lot more ground.</p>
+        <h2>Built for high-performing hospitality teams</h2>
+        <p>Everything you need to orchestrate a great floor shift and motivate your staff.</p>
       </div>
       <div class="feat-grid reveal">
         <div class="feat-card">
           <div class="feat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="2.4"/><circle cx="12" cy="12" r="7" opacity="0.5"/></svg></div>
-          <h4>Live Feedback</h4><p>Checkout prompts, no app needed. Responses land on your dashboard instantly.</p>
+          <h4>Instant Table QRs</h4><p>Custom table stands generated in seconds. Zero guest apps, logins, or tedious surveys.</p>
         </div>
         <div class="feat-card">
           <div class="feat-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 20V11M12 20V4M20 20v-6"/></svg></div>
-          <h4>Benchmark Tracking</h4><p>Live scores across sittings, sections and venues — not just at month's end.</p>
+          <h4>Staff Reward Leaderboards</h4><p>Recognize and incentivize waitstaff on hourly wages with transparent customer compliments.</p>
         </div>
         <div class="feat-card">
           <div class="feat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 14.2c1.1 1.2 2.4 1.8 4 1.8s2.9-.6 4-1.8"/><circle cx="9" cy="9.6" r="0.7" fill="currentColor" stroke="none"/><circle cx="15" cy="9.6" r="0.7" fill="currentColor" stroke="none"/></svg></div>
-          <h4>Sentiment Analysis</h4><p>Real-time tone detection flags a mood shift before a guest has to spell it out.</p>
+          <h4>Gamified Table Rewards</h4><p>Delight diners with an interactive "Spin-the-Wheel" game that drives immediate return visits.</p>
         </div>
         <div class="feat-card">
           <div class="feat-icon orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h11"/><path d="M14 6l6 6-6 6"/></svg></div>
-          <h4>Effective Routing</h4><p>A dropped signal escalates in real time to whoever can fix it — not an inbox.</p>
+          <h4>Cross-Venue Benchmarking</h4><p>Compare floor speed, sentiment, and return likelihood across multiple locations and shifts.</p>
         </div>
       </div>
-      <a class="section-link" href="features.html">See all features <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
+      <a class="section-link" href="features.html">See all features & integrations <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
     </div>
   </section>
 
   <section class="section-pad" id="trust">
     <div class="wrap">
       <div class="section-head reveal">
-        <p class="eyebrow">WHO'S USING IT</p>
-        <h2>Early days, real venues.</h2>
-        <p>Serviette is young — here's who's already on the floor with us.</p>
+        <p class="eyebrow">PARTNERS & EARLY ADOPTERS</p>
+        <h2>Powering real Australian venues.</h2>
+        <p>Serviette is young, energetic, and already live on the floor with hospitality leaders.</p>
       </div>
       <div class="partner-row reveal">
         <span class="partner-chip">🤝 Venue partner — <strong>The Charlie Glebe</strong></span>
-        <span class="partner-chip ghost">+ Your venue here</span>
+        <a href="qr-generator.html" class="partner-chip" style="text-decoration:none; color:inherit;">🖨️ <strong>Print Table QR Cards</strong></a>
         <span class="partner-chip ghost">+ Your venue here</span>
       </div>
-      <a class="section-link reveal" href="about-us.html">Read why we built Serviette <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
+      <a class="section-link reveal" href="about-us.html">Read our mission for Australian hospitality <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
     </div>
   </section>
 
   <section class="final-cta">
     <div class="wrap">
-      <p class="eyebrow">READY WHEN YOU ARE</p>
+      <p class="eyebrow">GET STARTED IN MINUTES</p>
       <h2>Ready to hear what your floor's been missing?</h2>
-      <p>Book a 20-minute walkthrough, or start your first month free — no card, no contract.</p>
+      <p>Book a 20-minute walkthrough, try the live dashboard, or launch your tables free for 30 days.</p>
       <div class="hero-ctas">
         <a class="btn btn-primary" href="https://calendar.app.google/LqZYC1YsDhPSSBzCA" target="_blank" rel="noopener">Book a walkthrough</a>
-        <a class="btn btn-ghost" href="mailto:hello@serviette.com.au">Email hello@serviette.com.au</a>
+        <a class="btn btn-ghost" href="dashboard.html">Launch Manager Portal</a>
       </div>
     </div>
   </section>
@@ -209,27 +208,33 @@
         </div>
       </div>
       <div class="footer-col">
-        <h5>Company</h5>
+        <h5>Product</h5>
         <ul>
-          <li><a href="about-us.html">About us</a></li>
-          <li><a href="contact.html">Contact us</a></li>
-          <li><a href="how-it-works.html">How it works</a></li>
+          <li><a href="dashboard.html"><strong>Manager Portal</strong></a></li>
+          <li><a href="feedback.html?table=04" target="_blank">Table Feedback Demo</a></li>
+          <li><a href="qr-generator.html">Print QR Stands</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
           <li><a href="features.html">Features</a></li>
           <li><a href="packages.html">Pricing</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h5>Policy</h5>
-        <ul><li><a href="privacy-policy.html">Privacy Policy</a></li></ul>
+        <h5>Company</h5>
+        <ul>
+          <li><a href="about-us.html">About us</a></li>
+          <li><a href="contact.html">Contact us</a></li>
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+        </ul>
       </div>
       <div class="footer-col">
         <h5>Partners</h5>
-        <ul><li><a href="https://www.thecharlie.au/" target="_blank" rel="noopener">The Charlie Glebe</a></li></ul>
+        <ul>
+          <li><a href="https://www.thecharlie.au/" target="_blank" rel="noopener">The Charlie Glebe</a></li>
+        </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 Serviette. All rights reserved.</span>
-    
     </div>
   </div>
 </footer>
