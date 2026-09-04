@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Serviette — Executive Floor Intelligence</title>
+  <title>Serviette — Live Floor Intelligence</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,274 +13,246 @@
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; color: #0F172A; }
     .display-font { font-family: 'Outfit', sans-serif; }
     .glass-card { background: #FFFFFF; border: 1px solid rgba(226, 232, 240, 0.8); box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03); border-radius: 20px; }
+    .serviette-logo { mix-blend-mode: multiply; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- ==================== LOGIN GATEWAY MODAL ==================== -->
-  <div id="loginModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl border border-slate-100 text-center">
-      <!-- Logo Lockup -->
-      <div class="inline-flex items-center gap-2 mb-4">
-        <img src="serviette-logo.png" onerror="this.src='logo.png'" alt="Serviette" class="w-8 h-8 object-contain">
-        <span class="display-font text-2xl font-black tracking-tight">SERVIETTE<span class="text-orange-500">.</span></span>
-      </div>
-      <h2 class="text-xl font-bold text-slate-900 mb-1">Manager Portal Login</h2>
-      <p class="text-xs text-slate-500 mb-6">Enter your restaurant pin or launch the live venue walkthrough.</p>
-
-      <div class="space-y-4 text-left">
-        <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Restaurant ID</label>
-          <input type="text" id="loginVenue" value="thecharlie" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-black">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Manager Passcode</label>
-          <input type="password" id="loginPin" value="8888" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-black">
-        </div>
-
-        <button onclick="handleLogin()" class="w-full py-3.5 bg-black text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition shadow-lg">
-          Sign In to Floor Dashboard
-        </button>
-
-        <div class="relative flex py-2 items-center">
-          <div class="flex-grow border-t border-slate-200"></div>
-          <span class="flex-shrink mx-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Or</span>
-          <div class="flex-grow border-t border-slate-200"></div>
-        </div>
-
-        <button onclick="quickDemo()" class="w-full py-3 bg-orange-50 border border-orange-200 text-orange-700 rounded-xl font-bold text-xs hover:bg-orange-100 transition">
-          Launch Live Interactive Demo (The Charlie Glebe)
-        </button>
-      </div>
+  <!-- TOP APP BAR -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <a href="index.html" class="flex items-center gap-2">
+        <img src="serviette-logo.png" onerror="this.src='logo.png'" alt="Serviette" class="h-8 w-auto object-contain serviette-logo">
+        <span class="display-font text-xl font-black tracking-tight">SERVIETTE<span class="text-orange-500">.</span></span>
+      </a>
+      <div class="h-5 w-[1px] bg-slate-200"></div>
+      <span class="text-xs font-bold px-3 py-1 rounded-full bg-orange-100 text-orange-800">The Charlie Glebe</span>
+      <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Live Sheet Synced
+      </span>
     </div>
-  </div>
 
-  <!-- ==================== MAIN DASHBOARD ==================== -->
-  <div id="dashboardApp" class="hidden flex-1 flex flex-col">
-
-    <!-- Top App Navigation -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 px-6 py-3.5 flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <a href="index.html" class="flex items-center gap-2">
-          <img src="serviette-logo.png" onerror="this.src='logo.png'" alt="Serviette" class="w-7 h-7 object-contain">
-          <span class="display-font text-xl font-black tracking-tight">SERVIETTE<span class="text-orange-500">.</span></span>
-        </a>
-        <div class="h-5 w-[1px] bg-slate-200"></div>
-        <span id="activeVenueTag" class="text-xs font-bold px-3 py-1 rounded-full bg-orange-100 text-orange-800">The Charlie Glebe</span>
-      </div>
-
-      <!-- Controls -->
-      <div class="flex items-center gap-3">
-        <button onclick="openConfigModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5">
-          <span>⚙️ Customise Venue / Roster</span>
-        </button>
-        <a href="qr-generator.html" class="text-xs bg-black text-white px-3.5 py-1.5 rounded-lg font-bold hover:bg-slate-800">
-          Print Table QRs
-        </a>
-        <button onclick="logout()" class="text-xs text-slate-400 hover:text-slate-700 font-semibold ml-2">Sign Out</button>
-      </div>
-    </header>
-
-    <!-- Content Area -->
-    <main class="max-w-7xl mx-auto p-6 flex-1 w-full space-y-6">
-
-      <!-- Metrics Summary Row -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        
-        <!-- Overall Rating -->
-        <div class="glass-card p-5 border-l-4 border-l-orange-500">
-          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Overall Floor Score</span>
-          <div class="flex items-baseline gap-2 mt-2">
-            <span class="display-font text-3xl font-black text-slate-900">4.82</span>
-            <span class="text-xs font-bold text-amber-500">★★★★★</span>
-          </div>
-          <p class="text-[11px] font-semibold text-emerald-600 mt-1">▲ 0.3 vs Sydney Inner-West Avg</p>
-        </div>
-
-        <!-- Top Waiter (Employee Reward Spotlight) -->
-        <div class="glass-card p-5 border-l-4 border-l-emerald-500">
-          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Top Floor Server</span>
-          <div class="flex items-center justify-between mt-2">
-            <span class="display-font text-2xl font-black text-slate-900">Alice</span>
-            <span class="text-xs font-black px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg">Bonus Ready</span>
-          </div>
-          <p class="text-[11px] text-slate-500 mt-1">98% positive compliments (24 tables)</p>
-        </div>
-
-        <!-- Return Likelihood (NPS) -->
-        <div class="glass-card p-5">
-          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Guest Return Intent</span>
-          <div class="display-font text-3xl font-black text-slate-900 mt-2">88%</div>
-          <p class="text-[11px] text-slate-500 mt-1">18 Promoters · 2 Passives · 0 Detractors</p>
-        </div>
-
-        <!-- Wheel Rewards Claimed -->
-        <div class="glass-card p-5">
-          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Table Rewards Given</span>
-          <div class="display-font text-3xl font-black text-orange-600 mt-2">20 Perks</div>
-          <p class="text-[11px] text-slate-500 mt-1">100% diners spun the wheel</p>
-        </div>
-      </div>
-
-      <!-- Core Question Performance Breakdowns -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        <!-- Question 1 Breakdown -->
-        <div class="glass-card p-5">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold text-slate-500 uppercase">Q1. Menu Knowledge</span>
-            <span class="text-sm font-black text-emerald-600">4.9 / 5.0</span>
-          </div>
-          <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-2">
-            <div class="bg-emerald-500 h-full w-[98%]"></div>
-          </div>
-          <p class="text-[11px] text-slate-400">Staff accurately answering wine & special questions.</p>
-        </div>
-
-        <!-- Question 2 Breakdown -->
-        <div class="glass-card p-5">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold text-slate-500 uppercase">Q2. Attitude & Presentation</span>
-            <span class="text-sm font-black text-emerald-600">4.8 / 5.0</span>
-          </div>
-          <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-2">
-            <div class="bg-orange-500 h-full w-[96%]"></div>
-          </div>
-          <p class="text-[11px] text-slate-400">Warm greetings, polite communication, clean attire.</p>
-        </div>
-
-        <!-- Question 3 Breakdown -->
-        <div class="glass-card p-5">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-bold text-slate-500 uppercase">Q3. "Felt at Home"</span>
-            <span class="text-sm font-black text-emerald-600">4.7 / 5.0</span>
-          </div>
-          <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-2">
-            <div class="bg-indigo-500 h-full w-[94%]"></div>
-          </div>
-          <p class="text-[11px] text-slate-400">Unique floor hospitality & attentiveness.</p>
-        </div>
-      </div>
-
-      <!-- Live Stream Feed Table -->
-      <div class="glass-card p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <h2 class="display-font text-lg font-bold text-slate-900">Real-Time Table Feedback</h2>
-            <p class="text-xs text-slate-400">Streaming live from table QR scans</p>
-          </div>
-          <a href="feedback.html?venue=thecharlie&table=04" target="_blank" class="text-xs font-bold px-3 py-1.5 bg-orange-100 text-orange-800 rounded-xl hover:bg-orange-200">
-            + Simulate Table 04 Feedback ↗
-          </a>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-50 text-slate-400 font-bold uppercase tracking-wider border-y border-slate-100">
-              <tr>
-                <th class="py-3 px-4">Time</th>
-                <th class="py-3 px-4">Table</th>
-                <th class="py-3 px-4">Server</th>
-                <th class="py-3 px-4">Knowledge</th>
-                <th class="py-3 px-4">Attitude</th>
-                <th class="py-3 px-4">Home Feel</th>
-                <th class="py-3 px-4">NPS</th>
-                <th class="py-3 px-4">Note to Manager</th>
-                <th class="py-3 px-4">Prize Won</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 font-medium">
-              <tr class="hover:bg-slate-50/80">
-                <td class="py-3.5 px-4 text-slate-400">Just now</td>
-                <td class="py-3.5 px-4 font-bold text-slate-900">Table 04</td>
-                <td class="py-3.5 px-4 font-bold text-orange-600">Alice</td>
-                <td class="py-3.5 px-4"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded">5 ★</span></td>
-                <td class="py-3.5 px-4"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded">5 ★</span></td>
-                <td class="py-3.5 px-4"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded">5 ★</span></td>
-                <td class="py-3.5 px-4 font-black text-emerald-700">10/10</td>
-                <td class="py-3.5 px-4 text-slate-600 max-w-xs">"Alice recommended the pinot noir and was amazing!"</td>
-                <td class="py-3.5 px-4 font-mono font-bold text-slate-800">Free Dessert (SRV-8942)</td>
-              </tr>
-              <tr class="hover:bg-slate-50/80">
-                <td class="py-3.5 px-4 text-slate-400">14 min ago</td>
-                <td class="py-3.5 px-4 font-bold text-slate-900">Table 12</td>
-                <td class="py-3.5 px-4 font-bold text-slate-700">Bob</td>
-                <td class="py-3.5 px-4"><span class="px-2 py-0.5 bg-amber-100 text-amber-800 font-bold rounded">4 ★</span></td>
-                <td class="py-3.5 px-4"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded">5 ★</span></td>
-                <td class="py-3.5 px-4"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded">5 ★</span></td>
-                <td class="py-3.5 px-4 font-black text-emerald-700">9/10</td>
-                <td class="py-3.5 px-4 text-slate-600 max-w-xs">"Friendly staff and warm atmosphere."</td>
-                <td class="py-3.5 px-4 font-mono font-bold text-slate-800">10% Off Bill</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- ==================== OWNER CONFIGURATION MODAL ==================== -->
-  <div id="configModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 class="display-font text-xl font-bold text-slate-900">Venue Customizer</h3>
-        <button onclick="closeConfigModal()" class="text-slate-400 hover:text-black font-black text-lg">✕</button>
-      </div>
-      <p class="text-xs text-slate-500">Configure what your staff and diners see on their table QR codes.</p>
-
-      <div>
-        <label class="block text-xs font-bold text-slate-700 mb-1">Restaurant Name</label>
-        <input type="text" id="cfgVenueName" value="The Charlie Glebe" class="w-full p-2.5 bg-slate-50 border rounded-xl text-sm font-semibold">
-      </div>
-
-      <div>
-        <label class="block text-xs font-bold text-slate-700 mb-1">Floor Waiter Roster (comma separated)</label>
-        <input type="text" id="cfgWaiters" value="Alice, Bob, Charlie, Sam, Ella" class="w-full p-2.5 bg-slate-50 border rounded-xl text-sm font-semibold">
-      </div>
-
-      <div>
-        <label class="block text-xs font-bold text-slate-700 mb-1">Total Number of Tables</label>
-        <input type="number" id="cfgTables" value="15" class="w-full p-2.5 bg-slate-50 border rounded-xl text-sm font-semibold">
-      </div>
-
-      <button onclick="saveConfig()" class="w-full py-3 bg-black text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition">
-        Save & Update Venue Experience
+    <div class="flex items-center gap-3">
+      <button onclick="fetchSheetData()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        <span>Refresh Sheet</span>
       </button>
+      <a href="feedback.html?venue=thecharlie&table=04" target="_blank" class="text-xs bg-orange-500 hover:bg-orange-600 text-white px-3.5 py-1.5 rounded-lg font-bold transition">
+        + Simulate Table Review ↗
+      </a>
     </div>
-  </div>
+  </header>
+
+  <!-- MAIN METRICS -->
+  <main class="max-w-7xl mx-auto p-6 flex-1 w-full space-y-6">
+
+    <!-- KPI CARDS -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="glass-card p-5 border-l-4 border-l-orange-500">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Overall Floor Rating</span>
+        <div class="flex items-baseline gap-2 mt-2">
+          <span id="statOverallRating" class="display-font text-3xl font-black text-slate-900">5.0</span>
+          <span class="text-xs font-bold text-amber-500">★★★★★</span>
+        </div>
+        <p class="text-[11px] font-semibold text-emerald-600 mt-1">Live from Guest Submissions</p>
+      </div>
+
+      <div class="glass-card p-5 border-l-4 border-l-emerald-500">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Top Server (Rewards)</span>
+        <div class="flex items-center justify-between mt-2">
+          <span id="statTopWaiter" class="display-font text-2xl font-black text-slate-900">Alice</span>
+          <span class="text-xs font-black px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg">Bonus Ready</span>
+        </div>
+        <p class="text-[11px] text-slate-500 mt-1" id="statTopWaiterSub">Leading positive tables</p>
+      </div>
+
+      <div class="glass-card p-5">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Recommendation (NPS)</span>
+        <div id="statNPS" class="display-font text-3xl font-black text-slate-900 mt-2">100%</div>
+        <p class="text-[11px] text-slate-500 mt-1">Diners likely to return</p>
+      </div>
+
+      <div class="glass-card p-5">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Rewards Granted</span>
+        <div id="statTotalResponses" class="display-font text-3xl font-black text-orange-600 mt-2">0 Perks</div>
+        <p class="text-[11px] text-slate-500 mt-1">Wheel spins completed</p>
+      </div>
+    </div>
+
+    <!-- QUESTION BREAKDOWNS (Q3, Q4, Q5) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="glass-card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-slate-500 uppercase">Q3. Menu Knowledge</span>
+          <span id="q3Score" class="text-sm font-black text-emerald-600">5.0 / 5.0</span>
+        </div>
+        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-2">
+          <div id="q3Bar" class="bg-emerald-500 h-full w-[100%]"></div>
+        </div>
+        <p class="text-[11px] text-slate-400">Staff answering menu & specials queries.</p>
+      </div>
+
+      <div class="glass-card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-slate-500 uppercase">Q4. Attitude & Politeness</span>
+          <span id="q4Score" class="text-sm font-black text-emerald-600">5.0 / 5.0</span>
+        </div>
+        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-2">
+          <div id="q4Bar" class="bg-orange-500 h-full w-[100%]"></div>
+        </div>
+        <p class="text-[11px] text-slate-400">Positive communication & presentation.</p>
+      </div>
+
+      <div class="glass-card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-slate-500 uppercase">Q5. Felt at Home</span>
+          <span id="q5Score" class="text-sm font-black text-emerald-600">5.0 / 5.0</span>
+        </div>
+        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-2">
+          <div id="q5Bar" class="bg-indigo-500 h-full w-[100%]"></div>
+        </div>
+        <p class="text-[11px] text-slate-400">Attentive table manner & unique warmth.</p>
+      </div>
+    </div>
+
+    <!-- LIVE TABLE FEED -->
+    <div class="glass-card p-6">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="display-font text-lg font-bold text-slate-900">Live Table Feed</h2>
+          <p class="text-xs text-slate-400">Real-time entries streaming from Google Sheets</p>
+        </div>
+        <a href="https://docs.google.com/spreadsheets/d/1SqCM2nPnlYXdBY6upaXr8PyPF6JKtDpr2Ph2NPr3du4/edit" target="_blank" class="text-xs font-bold text-slate-500 hover:text-black">
+          Open Google Sheet ↗
+        </a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50 text-slate-400 font-bold uppercase tracking-wider border-y border-slate-100">
+            <tr>
+              <th class="py-3 px-4">Time</th>
+              <th class="py-3 px-4">Restaurant</th>
+              <th class="py-3 px-4">Table</th>
+              <th class="py-3 px-4">Server</th>
+              <th class="py-3 px-4">Knowledge</th>
+              <th class="py-3 px-4">Attitude</th>
+              <th class="py-3 px-4">Home Feel</th>
+              <th class="py-3 px-4">NPS</th>
+              <th class="py-3 px-4">Manager Note</th>
+              <th class="py-3 px-4">Reward</th>
+              <th class="py-3 px-4">Voucher</th>
+            </tr>
+          </thead>
+          <tbody id="sheetTableBody" class="divide-y divide-slate-100 font-medium">
+            <tr>
+              <td colspan="11" class="py-6 text-center text-slate-400 font-medium">
+                Loading live rows from Google Sheets...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
 
   <script>
-    function handleLogin() {
-      const venue = document.getElementById('loginVenue').value;
-      document.getElementById('activeVenueTag').innerText = venue === 'thecharlie' ? 'The Charlie Glebe' : venue;
-      document.getElementById('loginModal').classList.add('hidden');
-      document.getElementById('dashboardApp').classList.remove('hidden');
+    const SPREADSHEET_ID = "1SqCM2nPnlYXdBY6upaXr8PyPF6JKtDpr2Ph2NPr3du4";
+    const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json`;
+
+    async function fetchSheetData() {
+      try {
+        const response = await fetch(GVIZ_URL);
+        const text = await response.text();
+        const rawJson = JSON.parse(text.substring(47).slice(0, -2));
+        const rows = rawJson.table.rows;
+
+        const tableBody = document.getElementById('sheetTableBody');
+        tableBody.innerHTML = '';
+
+        if (!rows || rows.length === 0) {
+          tableBody.innerHTML = `<tr><td colspan="11" class="py-6 text-center text-slate-400 font-medium">No reviews logged yet. Submit a test on the feedback page!</td></tr>`;
+          return;
+        }
+
+        let totalQ3 = 0, totalQ4 = 0, totalQ5 = 0, totalNPS = 0;
+        let waiterCounts = {};
+
+        for (let i = rows.length - 1; i >= 0; i--) {
+          const c = rows[i].c;
+          const time = c[0] ? c[0].f || c[0].v : 'Just now';
+          const venue = c[1] ? c[1].v : 'The Charlie Glebe';
+          const table = c[2] ? c[2].v : '01';
+          const server = c[3] ? c[3].v : 'Server';
+          const q3 = c[4] ? Number(c[4].v) : 5;
+          const q4 = c[5] ? Number(c[5].v) : 5;
+          const q5 = c[6] ? Number(c[6].v) : 5;
+          const nps = c[7] ? Number(c[7].v) : 10;
+          const notes = c[8] ? c[8].v : '';
+          const reward = c[9] ? c[9].v : 'Perk';
+          const voucher = c[10] ? c[10].v : 'SRV-0000';
+
+          totalQ3 += q3;
+          totalQ4 += q4;
+          totalQ5 += q5;
+          totalNPS += nps;
+
+          waiterCounts[server] = (waiterCounts[server] || 0) + 1;
+
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-50/80 transition";
+          tr.innerHTML = `
+            <td class="py-3.5 px-4 text-slate-400">${time}</td>
+            <td class="py-3.5 px-4 font-bold text-slate-800">${venue}</td>
+            <td class="py-3.5 px-4 font-black text-slate-900">Table ${table}</td>
+            <td class="py-3.5 px-4 font-bold text-orange-600">${server}</td>
+            <td class="py-3.5 px-4"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded">${q3} ★</span></td>
+            <td class="py-3.5 px-4"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded">${q4} ★</span></td>
+            <td class="py-3.5 px-4"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded">${q5} ★</span></td>
+            <td class="py-3.5 px-4 font-black ${nps >= 9 ? 'text-emerald-700' : 'text-amber-700'}">${nps}/10</td>
+            <td class="py-3.5 px-4 text-slate-600 max-w-xs truncate" title="${notes}">${notes || '—'}</td>
+            <td class="py-3.5 px-4 font-bold text-slate-800">${reward}</td>
+            <td class="py-3.5 px-4 font-mono font-bold text-slate-900">${voucher}</td>
+          `;
+          tableBody.appendChild(tr);
+        }
+
+        const count = rows.length;
+        document.getElementById('statTotalResponses').innerText = `${count} Perks`;
+
+        const avgQ3 = (totalQ3 / count).toFixed(1);
+        const avgQ4 = (totalQ4 / count).toFixed(1);
+        const avgQ5 = (totalQ5 / count).toFixed(1);
+        const overall = (((totalQ3 + totalQ4 + totalQ5) / (count * 3))).toFixed(2);
+
+        document.getElementById('statOverallRating').innerText = overall;
+        document.getElementById('q3Score').innerText = `${avgQ3} / 5.0`;
+        document.getElementById('q3Bar').style.width = `${(avgQ3 / 5) * 100}%`;
+        document.getElementById('q4Score').innerText = `${avgQ4} / 5.0`;
+        document.getElementById('q4Bar').style.width = `${(avgQ4 / 5) * 100}%`;
+        document.getElementById('q5Score').innerText = `${avgQ5} / 5.0`;
+        document.getElementById('q5Bar').style.width = `${(avgQ5 / 5) * 100}%`;
+
+        let topServer = "Alice", maxCount = 0;
+        for (let w in waiterCounts) {
+          if (waiterCounts[w] > maxCount) {
+            maxCount = waiterCounts[w];
+            topServer = w;
+          }
+        }
+        document.getElementById('statTopWaiter').innerText = topServer;
+        document.getElementById('statTopWaiterSub').innerText = `${maxCount} logged tables`;
+
+        const avgNPS = ((totalNPS / (count * 10)) * 100).toFixed(0);
+        document.getElementById('statNPS').innerText = `${avgNPS}%`;
+
+      } catch (err) {
+        console.warn("Loading initial data...", err);
+      }
     }
 
-    function quickDemo() {
-      document.getElementById('loginVenue').value = 'thecharlie';
-      handleLogin();
-    }
-
-    function logout() {
-      document.getElementById('dashboardApp').classList.add('hidden');
-      document.getElementById('loginModal').classList.remove('hidden');
-    }
-
-    function openConfigModal() {
-      document.getElementById('configModal').classList.remove('hidden');
-    }
-
-    function closeConfigModal() {
-      document.getElementById('configModal').classList.add('hidden');
-    }
-
-    function saveConfig() {
-      const newName = document.getElementById('cfgVenueName').value;
-      document.getElementById('activeVenueTag').innerText = newName;
-      alert("Venue configuration saved successfully! Your live QR codes and table surveys are now synced.");
-      closeConfigModal();
-    }
+    fetchSheetData();
+    setInterval(fetchSheetData, 15000);
   </script>
 </body>
 </html>
