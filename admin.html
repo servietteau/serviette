@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Serviette HQ — Owner Restaurant & Server Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #F8FAFC; color: #0F172A; }
+    .display-font { font-family: 'Outfit', sans-serif; }
+    .glass-panel { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 24px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.04); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Master Bar -->
+  <header class="bg-white border-b border-slate-200 px-6 py-4 sticky top-0 z-30 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <img src="serviette-logo.png" onerror="this.src='logo.png'" alt="Serviette" class="h-10 w-auto object-contain">
+      <div>
+        <h1 class="display-font text-xl font-black tracking-tight leading-none text-slate-900">SERVIETTE<span class="text-orange-500">.</span> HQ</h1>
+        <span class="text-[11px] font-bold tracking-wider text-orange-600 uppercase">Master Owner Management Portal</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="text-xs font-bold text-slate-500 hover:text-black">Exit to Website</a>
+      <button onclick="openNewVenueModal()" class="px-4 py-2 bg-black text-white text-xs font-bold rounded-xl hover:bg-slate-800 transition flex items-center gap-1.5 shadow-md">
+        <span>+ Add New Restaurant</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-6 flex-1 w-full space-y-6">
+
+    <!-- Top Stats Banner -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="glass-panel p-5 border-l-4 border-l-orange-500 flex items-center justify-between">
+        <div>
+          <span class="text-xs font-bold text-slate-400 uppercase">Active Venues</span>
+          <div class="display-font text-3xl font-black text-slate-900 mt-1" id="venueCount">3</div>
+        </div>
+        <img src="waiter-multitask.png" onerror="this.style.display='none'" class="w-14 h-14 object-contain">
+      </div>
+      <div class="glass-panel p-5 border-l-4 border-l-emerald-500">
+        <span class="text-xs font-bold text-slate-400 uppercase">Total Rostered Servers</span>
+        <div class="display-font text-3xl font-black text-slate-900 mt-1" id="serverCount">14</div>
+      </div>
+      <div class="glass-panel p-5 border-l-4 border-l-blue-500">
+        <span class="text-xs font-bold text-slate-400 uppercase">Tables Monitored</span>
+        <div class="display-font text-3xl font-black text-slate-900 mt-1" id="tableCount">42</div>
+      </div>
+      <div class="glass-panel p-5 border-l-4 border-l-purple-500">
+        <span class="text-xs font-bold text-slate-400 uppercase">Avg Response Time</span>
+        <div class="display-font text-3xl font-black text-slate-900 mt-1">18s</div>
+      </div>
+    </div>
+
+    <!-- Restaurant Management Grid -->
+    <div class="flex items-center justify-between mt-8 mb-2">
+      <div>
+        <h2 class="display-font text-2xl font-black text-slate-900">Client Restaurants</h2>
+        <p class="text-xs text-slate-500">Configure branding, waitstaff rosters, and customer reward wheels for each store.</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="venuesContainer">
+      <!-- Injected via JavaScript -->
+    </div>
+
+  </main>
+
+  <!-- ================= EDIT / ADD RESTAURANT MODAL ================= -->
+  <div id="venueModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="w-full max-w-xl bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100 my-8 space-y-5">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="display-font text-xl font-black text-slate-900" id="modalTitle">Configure Restaurant</h3>
+        <button onclick="closeVenueModal()" class="text-slate-400 hover:text-black font-bold text-xl">✕</button>
+      </div>
+
+      <input type="hidden" id="editVenueSlug">
+
+      <!-- Basic Details -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Restaurant Name</label>
+          <input type="text" id="vName" class="w-full p-3 bg-slate-50 border rounded-xl font-semibold text-sm focus:ring-2 focus:ring-black">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Unique URL Identifier (Slug)</label>
+          <input type="text" id="vSlug" class="w-full p-3 bg-slate-50 border rounded-xl font-semibold text-sm focus:ring-2 focus:ring-black">
+        </div>
+      </div>
+
+      <!-- Tables and Brand Color -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Total Tables</label>
+          <input type="number" id="vTables" min="1" max="100" class="w-full p-3 bg-slate-50 border rounded-xl font-semibold text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Theme Hue</label>
+          <select id="vTheme" class="w-full p-3 bg-slate-50 border rounded-xl font-semibold text-sm">
+            <option value="orange">Sunset Orange (Warm & Energetic)</option>
+            <option value="emerald">Emerald Matcha (Fresh Yo-Chi Style)</option>
+            <option value="rose">Bistro Rose & Berry</option>
+            <option value="indigo">Luxury Indigo</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Server Roster Management -->
+      <div>
+        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Active Floor Waitstaff (Comma separated)</label>
+        <textarea id="vWaiters" rows="2" class="w-full p-3 bg-slate-50 border rounded-xl font-semibold text-sm" placeholder="Alice, Bob, Charlie, Sam"></textarea>
+        <p class="text-[11px] text-slate-400 mt-1">Diners will be able to select and praise these servers on the feedback form.</p>
+      </div>
+
+      <!-- Spin the Wheel Perks -->
+      <div>
+        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Spin-the-Wheel Table Rewards (6 perks, comma separated)</label>
+        <textarea id="vPrizes" rows="2" class="w-full p-3 bg-slate-50 border rounded-xl font-semibold text-sm" placeholder="Free Dessert, 10% Off Bill, Free Flat White, Chef's Surprise, $10 Off Next Visit, Free Drink"></textarea>
+        <p class="text-[11px] text-slate-400 mt-1">Diners spin for these instant prizes after completing their review.</p>
+      </div>
+
+      <div class="flex gap-3 pt-3">
+        <button onclick="saveVenue()" class="flex-1 py-3.5 bg-black text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition shadow-lg">
+          Save Configuration
+        </button>
+        <button onclick="closeVenueModal()" class="px-5 py-3.5 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-200">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initial Default Venues
+    const DEFAULT_VENUES = {
+      "thecharlie": {
+        name: "The Charlie Glebe",
+        slug: "thecharlie",
+        tables: 16,
+        theme: "orange",
+        waiters: ["Alice", "Bob", "Charlie", "Sam", "Ella"],
+        prizes: ["Free Flat White", "10% Off Bill", "Free Dessert", "$15 Off Next Visit", "Chef Surprise", "Free Wine Glass"]
+      },
+      "yochi": {
+        name: "Yo-Chi Bondi",
+        slug: "yochi",
+        tables: 12,
+        theme: "emerald",
+        waiters: ["Jordan", "Mia", "Liam", "Lucas", "Sophie"],
+        prizes: ["Free Topping Cup", "15% Off Tub", "Free Drink", "Bonus Swirl", "Sticker Pack", "BOGO 50% Off"]
+      },
+      "surryhills": {
+        name: "Surry Hills Bistro",
+        slug: "surryhills",
+        tables: 20,
+        theme: "rose",
+        waiters: ["Marcus", "Chloe", "David", "Hannah"],
+        prizes: ["Free Aperitivo", "10% Off Lunch", "Free Tiramisu", "Chef's Bite", "Complimentary Coffee", "$10 Voucher"]
+      }
+    };
+
+    // Load from LocalStorage or initialize
+    function getVenues() {
+      const stored = localStorage.getItem('serviette_venues');
+      return stored ? JSON.parse(stored) : DEFAULT_VENUES;
+    }
+
+    function saveVenuesToStorage(venues) {
+      localStorage.setItem('serviette_venues', JSON.stringify(venues));
+    }
+
+    function renderVenues() {
+      const venues = getVenues();
+      const container = document.getElementById('venuesContainer');
+      container.innerHTML = '';
+
+      let totalServers = 0;
+      let totalTables = 0;
+      const keys = Object.keys(venues);
+
+      keys.forEach(k => {
+        const v = venues[k];
+        totalServers += v.waiters.length;
+        totalTables += parseInt(v.tables);
+
+        const themeBadge = v.theme === 'emerald' ? 'bg-emerald-100 text-emerald-800' :
+                           v.theme === 'rose' ? 'bg-rose-100 text-rose-800' :
+                           v.theme === 'indigo' ? 'bg-indigo-100 text-indigo-800' : 'bg-orange-100 text-orange-800';
+
+        const card = document.createElement('div');
+        card.className = "glass-panel p-6 flex flex-col justify-between hover:shadow-xl transition-all duration-300";
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full ${themeBadge}">
+                ${v.theme.toUpperCase()} THEME
+              </span>
+              <span class="text-xs text-slate-400 font-bold">${v.tables} Tables</span>
+            </div>
+
+            <h3 class="display-font text-xl font-black text-slate-900 mb-1">${v.name}</h3>
+            <p class="text-xs text-slate-400 mb-4 font-mono">slug: /?venue=${v.slug}</p>
+
+            <!-- Waitstaff Chips -->
+            <div class="mb-4">
+              <span class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Rostered Waiters (${v.waiters.length})</span>
+              <div class="flex flex-wrap gap-1.5">
+                ${v.waiters.map(w => `<span class="text-xs px-2.5 py-1 bg-slate-100 font-semibold rounded-lg text-slate-700">★ ${w}</span>`).join('')}
+              </div>
+            </div>
+
+            <!-- Reward Wheel Preview -->
+            <div class="p-3 bg-slate-50 rounded-xl mb-4 border border-slate-100">
+              <span class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Wheel Perks</span>
+              <p class="text-xs text-slate-600 font-medium truncate">${v.prizes.join(' • ')}</p>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+            <a href="feedback.html?venue=${v.slug}&table=01" target="_blank" class="flex-1 text-center py-2.5 bg-black text-white text-xs font-bold rounded-xl hover:bg-slate-800 transition">
+              Launch Guest View ↗
+            </a>
+            <button onclick="editVenue('${v.slug}')" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">
+              ⚙️ Edit
+            </button>
+            <button onclick="deleteVenue('${v.slug}')" class="px-3 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold rounded-xl transition">
+              🗑
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      document.getElementById('venueCount').innerText = keys.length;
+      document.getElementById('serverCount').innerText = totalServers;
+      document.getElementById('tableCount').innerText = totalTables;
+    }
+
+    function openNewVenueModal() {
+      document.getElementById('modalTitle').innerText = "Add New Restaurant";
+      document.getElementById('editVenueSlug').value = "";
+      document.getElementById('vName').value = "";
+      document.getElementById('vSlug').value = "";
+      document.getElementById('vTables').value = 12;
+      document.getElementById('vTheme').value = "orange";
+      document.getElementById('vWaiters').value = "Sarah, Michael, Chloe, Daniel";
+      document.getElementById('vPrizes').value = "Free Coffee, 10% Off Bill, Free Dessert, Chef's Surprise, $10 Voucher, Free Wine";
+      document.getElementById('venueModal').classList.remove('hidden');
+    }
+
+    function editVenue(slug) {
+      const venues = getVenues();
+      const v = venues[slug];
+      if (!v) return;
+
+      document.getElementById('modalTitle').innerText = `Edit ${v.name}`;
+      document.getElementById('editVenueSlug').value = slug;
+      document.getElementById('vName').value = v.name;
+      document.getElementById('vSlug').value = v.slug;
+      document.getElementById('vTables').value = v.tables;
+      document.getElementById('vTheme').value = v.theme;
+      document.getElementById('vWaiters').value = v.waiters.join(', ');
+      document.getElementById('vPrizes').value = v.prizes.join(', ');
+      document.getElementById('venueModal').classList.remove('hidden');
+    }
+
+    function closeVenueModal() {
+      document.getElementById('venueModal').classList.add('hidden');
+    }
+
+    function saveVenue() {
+      const slugInput = document.getElementById('vSlug').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (!slugInput) {
+        alert("Please provide a valid slug (e.g., thecharlie)");
+        return;
+      }
+
+      const venues = getVenues();
+      const originalSlug = document.getElementById('editVenueSlug').value;
+
+      if (originalSlug && originalSlug !== slugInput) {
+        delete venues[originalSlug];
+      }
+
+      venues[slugInput] = {
+        name: document.getElementById('vName').value || "Unnamed Venue",
+        slug: slugInput,
+        tables: parseInt(document.getElementById('vTables').value) || 10,
+        theme: document.getElementById('vTheme').value,
+        waiters: document.getElementById('vWaiters').value.split(',').map(s => s.trim()).filter(Boolean),
+        prizes: document.getElementById('vPrizes').value.split(',').map(s => s.trim()).filter(Boolean)
+      };
+
+      saveVenuesToStorage(venues);
+      closeVenueModal();
+      renderVenues();
+    }
+
+    function deleteVenue(slug) {
+      if (confirm(`Are you sure you want to delete ${slug}?`)) {
+        const venues = getVenues();
+        delete venues[slug];
+        saveVenuesToStorage(venues);
+        renderVenues();
+      }
+    }
+
+    // Initial render
+    renderVenues();
+  </script>
+</body>
+</html>
