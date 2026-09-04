@@ -3,296 +3,415 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Serviette — How Was Your Visit?</title>
+  <title>Rate Your Service — Serviette Experience</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  
   <style>
-    body { font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; background-color: #FAFAFA; color: #111; }
-    .serif-brand { font-family: 'Playfair Display', serif; }
-    .glass-card { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 10px 30px rgba(0,0,0,0.04); border-radius: 24px; }
-    .pill-btn { transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
-    .pill-btn:active { transform: scale(0.96); }
-    .star-rating svg { transition: transform 0.15s ease; }
-    .star-rating svg:active { transform: scale(1.25); }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at 10% 20%, #FFF7ED 0%, #FFF1F2 40%, #F0FDFA 100%);
+      min-height: 100vh;
+    }
+    .display-font { font-family: 'Outfit', sans-serif; }
+    
+    /* Dynamic Pop Animations */
+    .bubbly-card {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(16px);
+      border-radius: 28px;
+      box-shadow: 0 20px 40px -15px rgba(234, 88, 12, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.8);
+      animation: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .pill-tap {
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .pill-tap:hover { transform: translateY(-2px); }
+    .pill-tap:active { transform: scale(0.92); }
+
+    .score-btn {
+      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .score-btn.active {
+      background: #000 !important;
+      color: #FFF !important;
+      border-color: #000 !important;
+      transform: scale(1.08);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-between p-4 antialiased selection:bg-black selection:text-white">
+<body class="p-4 sm:p-6 antialiased flex flex-col items-center justify-between text-neutral-900">
 
-  <!-- Header Branding -->
-  <header class="w-full max-w-md pt-6 pb-2 text-center">
-    <div class="inline-flex items-center gap-2 mb-1">
-      <svg class="w-7 h-7 text-black" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6">
-        <path d="M15 65 C30 65 70 65 85 65" stroke-linecap="round"/>
-        <path d="M25 65 L45 85 L75 65" stroke-linecap="round"/>
-        <circle cx="50" cy="40" r="18" stroke-width="5"/>
-        <line x1="63" y1="53" x2="78" y2="68" stroke-width="7" stroke-linecap="round"/>
-      </svg>
-      <span class="serif-brand text-2xl font-bold tracking-tight">SERVIETTE.</span>
+  <!-- Top Floating Header with Venue Branding & Serviette Lockup -->
+  <header class="w-full max-w-lg flex items-center justify-between py-2 px-1 mb-2">
+    <div class="flex items-center gap-3">
+      <div id="venueBadgeIcon" class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-400 to-orange-500 text-white flex items-center justify-center font-bold text-lg shadow-md">
+        TC
+      </div>
+      <div>
+        <h2 id="venueTitle" class="display-font text-lg font-black tracking-tight leading-tight">The Charlie Glebe</h2>
+        <span class="text-[11px] font-bold uppercase tracking-widest text-orange-600 bg-orange-100/80 px-2 py-0.5 rounded-full">Guest Feedback</span>
+      </div>
     </div>
-    <p class="text-xs uppercase tracking-widest text-neutral-400 font-semibold" id="tableBadge">Table 04 • Live Feedback</p>
+
+    <!-- Official Serviette Badge -->
+    <div class="flex items-center gap-1.5 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-neutral-200/80 shadow-sm">
+      <img src="serviette-logo.png" onerror="this.src='logo.png'" alt="Serviette" class="w-5 h-5 object-contain">
+      <span class="text-[11px] font-extrabold tracking-wider text-neutral-800">SERVIETTE.</span>
+    </div>
   </header>
 
-  <!-- Step 1: Feedback Form -->
-  <main id="surveyContainer" class="w-full max-w-md glass-card p-6 my-auto">
-    <div class="text-center mb-6">
-      <h1 class="text-2xl font-bold tracking-tight text-neutral-900">How was your service today?</h1>
-      <p class="text-sm text-neutral-500 mt-1">Your feedback directly supports our team floor rewards.</p>
+  <!-- Survey Form Card -->
+  <main id="surveyContainer" class="w-full max-w-lg bubbly-card p-6 sm:p-8 my-auto space-y-7">
+
+    <!-- Progress Indicator -->
+    <div class="w-full bg-neutral-100 h-2 rounded-full overflow-hidden">
+      <div id="progressBar" class="bg-gradient-to-r from-amber-500 via-rose-500 to-orange-500 h-full w-1/4 transition-all duration-300"></div>
     </div>
 
-    <!-- Star Rating -->
-    <div class="flex justify-center gap-2 mb-8" id="starContainer">
-      <button type="button" onclick="setRating(1)" class="star-btn p-1 text-neutral-200 hover:text-amber-400">
-        <svg class="w-10 h-10 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-      </button>
-      <button type="button" onclick="setRating(2)" class="star-btn p-1 text-neutral-200 hover:text-amber-400">
-        <svg class="w-10 h-10 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-      </button>
-      <button type="button" onclick="setRating(3)" class="star-btn p-1 text-neutral-200 hover:text-amber-400">
-        <svg class="w-10 h-10 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-      </button>
-      <button type="button" onclick="setRating(4)" class="star-btn p-1 text-neutral-200 hover:text-amber-400">
-        <svg class="w-10 h-10 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-      </button>
-      <button type="button" onclick="setRating(5)" class="star-btn p-1 text-neutral-200 hover:text-amber-400">
-        <svg class="w-10 h-10 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-      </button>
+    <!-- Intro Header -->
+    <div>
+      <h1 class="display-font text-2xl sm:text-3xl font-black text-neutral-900 leading-tight">How was your visit today?</h1>
+      <p class="text-xs sm:text-sm text-neutral-500 mt-1">15 seconds of feedback helps us recognize our waitstaff and unlocks an instant prize.</p>
     </div>
 
-    <!-- Who took care of you? -->
-    <div class="mb-5">
-      <label class="block text-xs font-semibold text-neutral-600 uppercase tracking-wider mb-2">Who looked after you?</label>
-      <div class="grid grid-cols-3 gap-2" id="waiterSelection">
-        <button type="button" onclick="selectWaiter(this, 'Alice')" class="waiter-pill p-3 border border-neutral-200 rounded-xl text-sm font-medium hover:border-black text-center">Alice</button>
-        <button type="button" onclick="selectWaiter(this, 'Bob')" class="waiter-pill p-3 border border-neutral-200 rounded-xl text-sm font-medium hover:border-black text-center">Bob</button>
-        <button type="button" onclick="selectWaiter(this, 'Charlie')" class="waiter-pill p-3 border border-neutral-200 rounded-xl text-sm font-medium hover:border-black text-center">Charlie</button>
+    <!-- Q1: Table Selection -->
+    <div>
+      <label class="block text-xs font-black uppercase tracking-wider text-neutral-500 mb-2">1. Your Table Number</label>
+      <select id="tableNumberSelect" class="w-full p-3.5 bg-neutral-50 border-2 border-neutral-200 rounded-2xl font-bold text-base text-neutral-800 focus:outline-none focus:border-black transition">
+        <!-- Dynamically populated -->
+      </select>
+    </div>
+
+    <!-- Q2: Who was your server today? -->
+    <div>
+      <label class="block text-xs font-black uppercase tracking-wider text-neutral-500 mb-2">2. Who was your server today?</label>
+      <div class="grid grid-cols-3 gap-2.5" id="waiterRoster">
+        <!-- Dynamically populated buttons -->
       </div>
     </div>
 
-    <!-- Speed Gauge -->
-    <div class="mb-5">
-      <div class="flex justify-between text-xs font-semibold text-neutral-600 mb-1">
-        <span>Order Pace</span>
-        <span id="speedLabel" class="text-neutral-900 font-bold">Just Right</span>
+    <!-- Q3: Menu Knowledge -->
+    <div class="pt-2 border-t border-neutral-100">
+      <label class="block text-xs font-bold text-neutral-800 mb-2">
+        3. My server was knowledgeable of the menu items and was able to answer my questions?
+      </label>
+      <div class="flex items-center justify-between gap-1.5" data-question="knowledge">
+        <button type="button" onclick="setScore(this, 1)" class="score-btn flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">1</button>
+        <button type="button" onclick="setScore(this, 2)" class="score-btn flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">2</button>
+        <button type="button" onclick="setScore(this, 3)" class="score-btn flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">3</button>
+        <button type="button" onclick="setScore(this, 4)" class="score-btn flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">4</button>
+        <button type="button" onclick="setScore(this, 5)" class="score-btn active flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">5 ★</button>
       </div>
-      <input type="range" id="speedSlider" min="-100" max="100" value="20" oninput="updateSpeed(this.value)" class="w-full accent-black cursor-pointer">
-      <div class="flex justify-between text-[11px] text-neutral-400 mt-1">
-        <span>A Bit Slow</span>
-        <span>Perfect</span>
-        <span>Ultra Fast</span>
-      </div>
-    </div>
-
-    <!-- Quick Tags -->
-    <div class="mb-5">
-      <label class="block text-xs font-semibold text-neutral-600 uppercase tracking-wider mb-2">Quick Highlights</label>
-      <div class="flex flex-wrap gap-2" id="tagList">
-        <button type="button" onclick="toggleTag(this)" class="tag-pill text-xs px-3 py-1.5 rounded-full border border-neutral-200 bg-neutral-50 text-neutral-700">Friendly staff</button>
-        <button type="button" onclick="toggleTag(this)" class="tag-pill text-xs px-3 py-1.5 rounded-full border border-neutral-200 bg-neutral-50 text-neutral-700">Amazing waiter</button>
-        <button type="button" onclick="toggleTag(this)" class="tag-pill text-xs px-3 py-1.5 rounded-full border border-neutral-200 bg-neutral-50 text-neutral-700">Great food</button>
-        <button type="button" onclick="toggleTag(this)" class="tag-pill text-xs px-3 py-1.5 rounded-full border border-neutral-200 bg-neutral-50 text-neutral-700">Too slow</button>
-        <button type="button" onclick="toggleTag(this)" class="tag-pill text-xs px-3 py-1.5 rounded-full border border-neutral-200 bg-neutral-50 text-neutral-700">Messed up order</button>
+      <div class="flex justify-between text-[10px] font-bold text-neutral-400 mt-1 px-1">
+        <span>Needs Improvement (1)</span>
+        <span>Exceptional (5)</span>
       </div>
     </div>
 
-    <!-- Short Note -->
-    <div class="mb-6">
-      <textarea id="guestNotes" rows="2" placeholder="Any special shoutout or comment for the floor manager?" class="w-full p-3 text-sm rounded-xl border border-neutral-200 focus:outline-none focus:border-black focus:ring-1 focus:ring-black"></textarea>
+    <!-- Q4: Attitude & Presentation -->
+    <div class="pt-2 border-t border-neutral-100">
+      <label class="block text-xs font-bold text-neutral-800 mb-2">
+        4. My server was appropriately presented, had a positive attitude and communicated clearly and politely?
+      </label>
+      <div class="flex items-center justify-between gap-1.5" data-question="presentation">
+        <button type="button" onclick="setScore(this, 1)" class="score-btn flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">1</button>
+        <button type="button" onclick="setScore(this, 2)" class="score-btn flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">2</button>
+        <button type="button" onclick="setScore(this, 3)" class="score-btn flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">3</button>
+        <button type="button" onclick="setScore(this, 4)" class="score-btn flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">4</button>
+        <button type="button" onclick="setScore(this, 5)" class="score-btn active flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">5 ★</button>
+      </div>
+      <div class="flex justify-between text-[10px] font-bold text-neutral-400 mt-1 px-1">
+        <span>Needs Work (1)</span>
+        <span>Flawless (5)</span>
+      </div>
     </div>
 
-    <!-- Submit Button -->
-    <button type="button" onclick="submitFeedback()" class="pill-btn w-full py-4 rounded-full bg-black text-white font-medium text-sm flex items-center justify-center gap-2 shadow-lg shadow-black/10">
-      <span>Submit & Unlock Table Reward</span>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+    <!-- Q5: Attentive / Felt at home -->
+    <div class="pt-2 border-t border-neutral-100">
+      <label class="block text-xs font-bold text-neutral-800 mb-2">
+        5. My server was attentive and offered a unique experience by making me feel at home?
+      </label>
+      <div class="flex items-center justify-between gap-1.5" data-question="attentive">
+        <button type="button" onclick="setScore(this, 1)" class="score-btn flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">1</button>
+        <button type="button" onclick="setScore(this, 2)" class="score-btn flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">2</button>
+        <button type="button" onclick="setScore(this, 3)" class="score-btn flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">3</button>
+        <button type="button" onclick="setScore(this, 4)" class="score-btn flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">4</button>
+        <button type="button" onclick="setScore(this, 5)" class="score-btn active flex-1 py-3 border-2 border-neutral-200 rounded-xl font-black text-sm bg-neutral-50 text-neutral-700">5 ★</button>
+      </div>
+      <div class="flex justify-between text-[10px] font-bold text-neutral-400 mt-1 px-1">
+        <span>Rarely seen (1)</span>
+        <span>Felt like family (5)</span>
+      </div>
+    </div>
+
+    <!-- Q6: Recommendation (NPS 0-10) -->
+    <div class="pt-2 border-t border-neutral-100">
+      <label class="block text-xs font-bold text-neutral-800 mb-1">
+        6. How likely are you to recommend this restaurant to family or friends?
+      </label>
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-[11px] text-neutral-400 font-bold">Unlikely (0)</span>
+        <span id="npsBadge" class="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">10 / 10 — Absolutely</span>
+        <span class="text-[11px] text-neutral-400 font-bold">Definite (10)</span>
+      </div>
+      <input type="range" id="npsRange" min="0" max="10" value="10" oninput="updateNPS(this.value)" class="w-full h-2.5 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-orange-500">
+    </div>
+
+    <!-- Q7: Notes to the Manager -->
+    <div class="pt-2 border-t border-neutral-100">
+      <label class="block text-xs font-bold text-neutral-800 mb-1.5">
+        7. Would you like to share more information with the manager?
+      </label>
+      <textarea id="managerNote" rows="2" placeholder="Let us know what made your night or what we can fix..." class="w-full p-3 text-sm bg-neutral-50 border-2 border-neutral-200 rounded-xl focus:outline-none focus:border-black transition resize-none"></textarea>
+    </div>
+
+    <!-- Submit & Trigger Game -->
+    <button type="button" onclick="proceedToReward()" class="pill-tap w-full py-4 rounded-2xl bg-gradient-to-r from-orange-500 via-rose-500 to-amber-500 text-white font-black text-base tracking-wide flex items-center justify-center gap-2 shadow-lg shadow-orange-500/30">
+      <span>Complete & Spin For Rewards! 🎁</span>
     </button>
   </main>
 
-  <!-- Step 2: Gamified "Spin the Wheel" Reward -->
-  <main id="wheelContainer" class="hidden w-full max-w-md glass-card p-6 my-auto text-center">
-    <div class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold mb-2">Thank you!</div>
-    <h2 class="text-2xl font-bold tracking-tight text-neutral-900 mb-1">Spin to Win Your Reward</h2>
-    <p class="text-xs text-neutral-500 mb-6">Our gift for helping our floor team improve.</p>
+  <!-- Step 2: Gamified "Spin the Wheel" Prize Reveal -->
+  <main id="wheelContainer" class="hidden w-full max-w-lg bubbly-card p-6 sm:p-8 my-auto text-center space-y-5">
+    <div class="inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-black uppercase tracking-wider">
+      Table Bonus Unlocked!
+    </div>
+    
+    <div>
+      <h2 class="display-font text-3xl font-black text-neutral-900 leading-tight">Spin to Win Your Perk!</h2>
+      <p class="text-xs sm:text-sm text-neutral-500 mt-1">Our gift for helping us celebrate our floor team.</p>
+    </div>
 
-    <!-- Canvas Wheel -->
-    <div class="relative w-64 h-64 mx-auto mb-6 flex items-center justify-center">
-      <!-- Pointer Indicator -->
-      <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[18px] border-t-black drop-shadow-md"></div>
-      <canvas id="wheelCanvas" width="260" height="260" class="rounded-full shadow-md"></canvas>
-      <!-- Center Cap -->
-      <div class="absolute w-12 h-12 bg-white rounded-full border-4 border-neutral-900 flex items-center justify-center shadow-inner z-10">
-        <div class="w-4 h-4 rounded-full bg-neutral-900"></div>
+    <!-- Wheel Canvas -->
+    <div class="relative w-72 h-72 mx-auto my-3 flex items-center justify-center">
+      <!-- Arrow Pointer -->
+      <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-30 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[22px] border-t-black drop-shadow-lg"></div>
+      
+      <canvas id="wheelCanvas" width="280" height="280" class="rounded-full shadow-2xl border-4 border-white"></canvas>
+
+      <!-- Center Logo Cap -->
+      <div class="absolute w-14 h-14 bg-white rounded-full border-4 border-neutral-900 flex items-center justify-center shadow-lg z-20">
+        <img src="serviette-logo.png" onerror="this.src='logo.png'" alt="S" class="w-8 h-8 object-contain">
       </div>
     </div>
 
-    <button id="spinBtn" type="button" onclick="spinWheel()" class="pill-btn w-full py-4 rounded-full bg-black text-white font-medium text-sm shadow-lg">
-      Spin Now
+    <button id="spinBtn" type="button" onclick="spinWheel()" class="pill-tap w-full py-4 rounded-2xl bg-black text-white font-black text-base shadow-xl hover:bg-neutral-800">
+      TAP TO SPIN THE WHEEL ⚡
     </button>
 
-    <!-- Prize Reveal Modal -->
-    <div id="prizeModal" class="hidden mt-6 p-4 rounded-2xl bg-neutral-50 border border-neutral-200">
-      <p class="text-xs text-neutral-500 uppercase tracking-widest font-bold">You Won</p>
-      <p id="prizeWonText" class="text-lg font-bold text-neutral-900 my-1">Free Handcrafted Dessert</p>
-      <p class="text-xs text-neutral-500 mb-3">Show this code to your server or at checkout:</p>
-      <div class="inline-block px-4 py-2 rounded-xl bg-white border border-neutral-300 font-mono font-bold text-base tracking-widest" id="voucherCode">
+    <!-- Prize Reveal Voucher Card -->
+    <div id="prizeModal" class="hidden p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-300 text-center animate-bounce">
+      <p class="text-xs text-amber-700 font-extrabold uppercase tracking-widest">Congratulations!</p>
+      <h3 id="prizeWonTitle" class="display-font text-2xl font-black text-neutral-900 my-1">Free Signature Dessert</h3>
+      <p class="text-xs text-neutral-600 mb-3">Show this live voucher to your server or at the register:</p>
+      <div class="inline-block px-5 py-2.5 rounded-xl bg-white border-2 border-neutral-900 font-mono font-black text-lg tracking-widest text-neutral-900 shadow-sm" id="voucherDisplay">
         SRV-8942
       </div>
     </div>
   </main>
 
-  <footer class="text-center py-4 text-xs text-neutral-400">
-    Powered by <span class="font-semibold text-neutral-700">Serviette Intelligence</span> • Sydney, NSW
+  <!-- Footer Branding -->
+  <footer class="text-center py-4 text-xs font-semibold text-neutral-400">
+    Service Intelligence powered by <a href="index.html" class="underline font-bold text-neutral-700">Serviette</a>
   </footer>
 
   <script>
-    // State management
-    let selectedRating = 5;
-    let selectedWaiter = 'Alice';
-    let selectedSpeed = 20;
-    let selectedTags = [];
+    // --- MULTI-TENANT CONFIGURATION MATRIX ---
+    // You can easily add more venues here, customize waiters, tables, and wheel prizes!
+    const VENUES = {
+      'thecharlie': {
+        name: 'The Charlie Glebe',
+        initials: 'TC',
+        tables: 15,
+        waiters: ['Alice', 'Bob', 'Charlie', 'Sam', 'Ella'],
+        prizes: ['Free Flat White', '10% Off Bill', 'Free Dessert', '$15 Off Next Visit', 'Chef Surprise', 'Free Wine Glass'],
+        colors: ['#F97316', '#EF4444', '#F59E0B', '#10B981', '#6366F1', '#EC4899']
+      },
+      'yochi': {
+        name: 'Yo-Chi Artisan Fro-Yo',
+        initials: 'YC',
+        tables: 10,
+        waiters: ['Jordan', 'Mia', 'Liam', 'Lucas'],
+        prizes: ['Free Topping Cup', '15% Off Tub', 'Free Drink', 'Bonus Swirl', 'Sticker Pack', 'Buy 1 Get 1 50%'],
+        colors: ['#10B981', '#3B82F6', '#F59E0B', '#EC4899', '#8B5CF6', '#F97316']
+      },
+      'default': {
+        name: 'Bistro Bondi',
+        initials: 'BB',
+        tables: 12,
+        waiters: ['Sarah', 'David', 'Chloe', 'Marco'],
+        prizes: ['Free Coffee', 'Complimentary Side', 'Free Dessert', '10% Off', 'Tasting Board', 'Chef Choice'],
+        colors: ['#EA580C', '#E11D48', '#D97706', '#059669', '#4F46E5', '#DB2777']
+      }
+    };
+
+    // Parse URL params (?venue=thecharlie&table=04)
     const urlParams = new URLSearchParams(window.location.search);
-    const tableNo = urlParams.get('table') || '04';
-    const storeId = urlParams.get('store') || 'thecharlie';
+    const venueKey = urlParams.get('venue') || 'thecharlie';
+    const preselectedTable = urlParams.get('table') || '1';
+    const venueConfig = VENUES[venueKey] || VENUES['default'];
 
-    document.getElementById('tableBadge').innerText = `Table ${tableNo} • Serviette Live Feedback`;
+    // Setup Custom Venue Branding
+    document.getElementById('venueTitle').innerText = venueConfig.name;
+    document.getElementById('venueBadgeIcon').innerText = venueConfig.initials;
 
-    function setRating(val) {
-      selectedRating = val;
-      const buttons = document.querySelectorAll('.star-btn');
-      buttons.forEach((btn, idx) => {
-        btn.classList.toggle('text-amber-400', idx < val);
-        btn.classList.toggle('text-neutral-200', idx >= val);
+    // Populate Tables
+    const tableSelect = document.getElementById('tableNumberSelect');
+    for (let t = 1; t <= venueConfig.tables; t++) {
+      const opt = document.createElement('option');
+      opt.value = t;
+      opt.innerText = `Table ${t < 10 ? '0' + t : t}`;
+      if (parseInt(preselectedTable) === t) opt.selected = true;
+      tableSelect.appendChild(opt);
+    }
+
+    // Populate Waiters
+    const waiterGrid = document.getElementById('waiterRoster');
+    let currentWaiter = venueConfig.waiters[0];
+    venueConfig.waiters.forEach((waiter, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.innerText = waiter;
+      btn.className = `waiter-pill p-3 border-2 rounded-2xl text-xs sm:text-sm font-black transition ${
+        idx === 0 ? 'bg-black text-white border-black shadow-md' : 'bg-neutral-50 text-neutral-700 border-neutral-200'
+      }`;
+      btn.onclick = () => selectWaiter(btn, waiter);
+      waiterGrid.appendChild(btn);
+    });
+
+    function selectWaiter(btn, name) {
+      currentWaiter = name;
+      document.querySelectorAll('.waiter-pill').forEach(b => {
+        b.className = 'waiter-pill p-3 border-2 rounded-2xl text-xs sm:text-sm font-black bg-neutral-50 text-neutral-700 border-neutral-200 transition';
       });
-    }
-    setRating(5);
-
-    function selectWaiter(el, name) {
-      selectedWaiter = name;
-      document.querySelectorAll('.waiter-pill').forEach(b => b.classList.remove('bg-black', 'text-white', 'border-black'));
-      el.classList.add('bg-black', 'text-white', 'border-black');
-    }
-    // Default select Alice
-    selectWaiter(document.querySelector('.waiter-pill'), 'Alice');
-
-    function updateSpeed(val) {
-      selectedSpeed = parseInt(val);
-      const label = document.getElementById('speedLabel');
-      if (val < -30) label.innerText = "A bit slow";
-      else if (val > 30) label.innerText = "Prompt & swift";
-      else label.innerText = "Just right";
+      btn.className = 'waiter-pill p-3 border-2 rounded-2xl text-xs sm:text-sm font-black bg-black text-white border-black shadow-md transition';
     }
 
-    function toggleTag(el) {
-      const tag = el.innerText;
-      if (selectedTags.includes(tag)) {
-        selectedTags = selectedTags.filter(t => t !== tag);
-        el.classList.remove('bg-neutral-900', 'text-white');
-        el.classList.add('bg-neutral-50', 'text-neutral-700');
+    // Question Scores Matrix
+    const scores = { knowledge: 5, presentation: 5, attentive: 5, nps: 10 };
+
+    function setScore(el, val) {
+      const group = el.parentElement;
+      const questionKey = group.getAttribute('data-question');
+      scores[questionKey] = val;
+      group.querySelectorAll('.score-btn').forEach(btn => btn.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function updateNPS(val) {
+      scores.nps = parseInt(val);
+      const badge = document.getElementById('npsBadge');
+      if (val >= 9) {
+        badge.innerText = `${val} / 10 — Promoter ★`;
+        badge.className = "text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800";
+      } else if (val >= 7) {
+        badge.innerText = `${val} / 10 — Passive`;
+        badge.className = "text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800";
       } else {
-        selectedTags.push(tag);
-        el.classList.add('bg-neutral-900', 'text-white');
-        el.classList.remove('bg-neutral-50', 'text-neutral-700');
+        badge.innerText = `${val} / 10 — Needs Attention`;
+        badge.className = "text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800";
       }
     }
 
-    // Canvas Wheel Construction
+    // Switch to Wheel Screen
+    function proceedToReward() {
+      document.getElementById('surveyContainer').classList.add('hidden');
+      document.getElementById('wheelContainer').classList.remove('hidden');
+      drawWheel();
+    }
+
+    // Wheel Canvas Implementation
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
-    const prizes = [
-      "Free Flat White", 
-      "10% Off Next Meal", 
-      "Free Dessert", 
-      "Chef's Tasting Bite", 
-      "20% Off Wine Bottle", 
-      "Complimentary Side"
-    ];
-    const colors = ["#F87171", "#FB923C", "#FBBF24", "#34D399", "#60A5FA", "#A78BFA"];
     let currentAngle = 0;
+    let isSpinning = false;
 
     function drawWheel() {
-      const numSegments = prizes.length;
+      const numSegments = venueConfig.prizes.length;
       const anglePerSegment = (2 * Math.PI) / numSegments;
       for (let i = 0; i < numSegments; i++) {
         const start = currentAngle + (i * anglePerSegment);
         const end = start + anglePerSegment;
         ctx.beginPath();
-        ctx.moveTo(130, 130);
-        ctx.arc(130, 130, 128, start, end);
-        ctx.fillStyle = colors[i];
+        ctx.moveTo(140, 140);
+        ctx.arc(140, 140, 138, start, end);
+        ctx.fillStyle = venueConfig.colors[i % venueConfig.colors.length];
         ctx.fill();
         ctx.strokeStyle = "#FFFFFF";
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 4;
         ctx.stroke();
 
+        // Label
         ctx.save();
-        ctx.translate(130, 130);
+        ctx.translate(140, 140);
         ctx.rotate(start + anglePerSegment / 2);
         ctx.fillStyle = "#FFFFFF";
-        ctx.font = "bold 11px -apple-system, sans-serif";
+        ctx.font = "900 11px 'Plus Jakarta Sans', sans-serif";
         ctx.textAlign = "right";
-        ctx.fillText(prizes[i], 115, 4);
+        ctx.fillText(venueConfig.prizes[i], 124, 4);
         ctx.restore();
       }
     }
-    drawWheel();
 
-    function submitFeedback() {
-      // Transition to Wheel screen
-      document.getElementById('surveyContainer').classList.add('hidden');
-      document.getElementById('wheelContainer').classList.remove('hidden');
-    }
-
-    let isSpinning = false;
     function spinWheel() {
       if (isSpinning) return;
       isSpinning = true;
       document.getElementById('spinBtn').disabled = true;
 
-      const randomSegment = Math.floor(Math.random() * prizes.length);
-      const spins = 5 * 360; // 5 full revolutions
-      const segmentAngle = 360 / prizes.length;
-      // Target pointing directly to the top pointer (270 degrees)
+      const randomSegment = Math.floor(Math.random() * venueConfig.prizes.length);
+      const spins = 6 * 360; // 6 spins
+      const segmentAngle = 360 / venueConfig.prizes.length;
       const targetDeg = spins + (270 - (randomSegment * segmentAngle + segmentAngle / 2));
       
       let startTime = null;
-      const duration = 4000;
+      const duration = 4200;
 
       function animate(time) {
         if (!startTime) startTime = time;
         const progress = Math.min((time - startTime) / duration, 1);
-        // Ease out cubic
-        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const easeOut = 1 - Math.pow(1 - progress, 4); // super smooth decelerate
         const currentDeg = easeOut * targetDeg;
         currentAngle = (currentDeg * Math.PI) / 180;
-        ctx.clearRect(0, 0, 260, 260);
+        ctx.clearRect(0, 0, 280, 280);
         drawWheel();
 
         if (progress < 1) {
           requestAnimationFrame(animate);
         } else {
-          // Finished
-          const prizeWon = prizes[randomSegment];
-          confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-          document.getElementById('prizeWonText').innerText = prizeWon;
-          document.getElementById('voucherCode').innerText = "SRV-" + Math.floor(1000 + Math.random() * 9000);
+          const prizeWon = venueConfig.prizes[randomSegment];
+          confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+          document.getElementById('prizeWonTitle').innerText = prizeWon;
+          const voucher = "SRV-" + Math.floor(1000 + Math.random() * 9000);
+          document.getElementById('voucherDisplay').innerText = voucher;
           document.getElementById('prizeModal').classList.remove('hidden');
           document.getElementById('spinBtn').classList.add('hidden');
 
-          // Send to Google Sheets Apps Script
+          // Package submission for Google Sheets
           const payload = {
-            storeId: storeId,
-            table: tableNo,
-            waiter: selectedWaiter,
-            rating: selectedRating,
-            speed: selectedSpeed,
-            food: selectedRating,
-            tags: selectedTags,
-            notes: document.getElementById('guestNotes').value,
-            reward: prizeWon
+            storeId: venueConfig.name,
+            table: document.getElementById('tableNumberSelect').value,
+            waiter: currentWaiter,
+            knowledge: scores.knowledge,
+            presentation: scores.presentation,
+            attentive: scores.attentive,
+            nps: scores.nps,
+            notes: document.getElementById('managerNote').value,
+            reward: prizeWon,
+            voucher: voucher
           };
 
-          /* REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL */
+          // Post to Google Apps Script / SheetDB
           const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
           if (GOOGLE_SCRIPT_URL !== "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
             fetch(GOOGLE_SCRIPT_URL, {
