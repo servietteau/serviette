@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Serviette — Service Intelligence & Floor Analytics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; background-color: #F8F9FA; color: #111; }
+    .serif-brand { font-family: 'Playfair Display', serif; }
+    .glass-card { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.02); border-radius: 18px; }
+  </style>
+</head>
+<body class="min-h-screen antialiased flex flex-col">
+
+  <!-- Top Navigation Bar -->
+  <header class="bg-white border-b border-neutral-200 sticky top-0 z-30 px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-6">
+      <a href="index.html" class="flex items-center gap-2">
+        <svg class="w-6 h-6 text-black" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6">
+          <path d="M15 65 C30 65 70 65 85 65" stroke-linecap="round"/>
+          <path d="M25 65 L45 85 L75 65" stroke-linecap="round"/>
+          <circle cx="50" cy="40" r="18" stroke-width="5"/>
+          <line x1="63" y1="53" x2="78" y2="68" stroke-width="7" stroke-linecap="round"/>
+        </svg>
+        <span class="serif-brand text-xl font-bold tracking-tight">SERVIETTE.</span>
+      </a>
+      <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-neutral-100 text-neutral-600">Executive Console</span>
+    </div>
+
+    <!-- Slicers / Filters Matching Mockup -->
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 text-xs">
+        <label class="text-neutral-400 font-medium">Venue:</label>
+        <select id="venueFilter" onchange="filterData()" class="bg-neutral-50 border border-neutral-200 rounded-lg px-2.5 py-1.5 font-medium text-neutral-800 focus:outline-none">
+          <option value="all">All Venues</option>
+          <option value="charlie" selected>The Charlie Glebe</option>
+          <option value="surry">Surry Hills Bistro</option>
+        </select>
+      </div>
+
+      <div class="flex items-center gap-2 text-xs">
+        <label class="text-neutral-400 font-medium">Waiter:</label>
+        <select id="waiterFilter" onchange="filterData()" class="bg-neutral-50 border border-neutral-200 rounded-lg px-2.5 py-1.5 font-medium text-neutral-800 focus:outline-none">
+          <option value="all" selected>All Staff</option>
+          <option value="Alice">Alice</option>
+          <option value="Bob">Bob</option>
+          <option value="Charlie">Charlie</option>
+        </select>
+      </div>
+
+      <a href="qr-generator.html" class="ml-2 text-xs bg-black text-white px-3.5 py-1.5 rounded-lg font-medium hover:bg-neutral-800 transition">
+        + Get Table QRs
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Analytics Grid -->
+  <main class="max-w-7xl mx-auto p-6 flex-1 w-full space-y-6">
+
+    <!-- KPI Cards Row -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <!-- Return Likelihood -->
+      <div class="glass-card p-5">
+        <span class="text-xs text-neutral-400 font-semibold uppercase tracking-wider">Return Likelihood</span>
+        <div class="text-3xl font-bold text-neutral-900 mt-2">60%</div>
+        <p class="text-[11px] text-emerald-600 mt-1 font-medium">▲ +4% from last sitting</p>
+      </div>
+
+      <!-- Top Waiter -->
+      <div class="glass-card p-5 border-l-4 border-l-amber-400">
+        <span class="text-xs text-neutral-400 font-semibold uppercase tracking-wider">Top Waiter</span>
+        <div class="text-3xl font-bold text-neutral-900 mt-2 flex items-center justify-between">
+          <span>Alice</span>
+          <span class="text-sm px-2.5 py-1 bg-amber-50 text-amber-800 rounded-lg font-bold border border-amber-200">★ $50 Reward Eligible</span>
+        </div>
+        <p class="text-[11px] text-neutral-500 mt-1">4.92 / 5 avg satisfaction (18 tables)</p>
+      </div>
+
+      <!-- Total Surveys -->
+      <div class="glass-card p-5">
+        <span class="text-xs text-neutral-400 font-semibold uppercase tracking-wider">Surveys Completed</span>
+        <div class="text-3xl font-bold text-neutral-900 mt-2 flex items-center gap-2">
+          <span>20</span>
+          <span class="text-xs font-normal text-neutral-400">responses</span>
+        </div>
+        <p class="text-[11px] text-neutral-500 mt-1">100% rewarded with wheel perks</p>
+      </div>
+
+      <!-- Overall Rating -->
+      <div class="glass-card p-5">
+        <span class="text-xs text-neutral-400 font-semibold uppercase tracking-wider">Overall Guest Rating</span>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span class="text-3xl font-bold text-neutral-900">4.08</span>
+          <div class="flex text-amber-400 text-sm">★★★★☆</div>
+        </div>
+        <p class="text-[11px] text-neutral-500 mt-1">Benchmarked against Sydney avg (3.84)</p>
+      </div>
+    </div>
+
+    <!-- Deep Intelligence Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- NPS & Speed Gauge Mockup Component -->
+      <div class="glass-card p-6 flex flex-col justify-between">
+        <div>
+          <h2 class="text-sm font-bold uppercase tracking-wider text-neutral-500 mb-4">Service Order Speed</h2>
+          <!-- Gauge Chart Canvas -->
+          <div class="relative w-48 h-28 mx-auto">
+            <canvas id="speedGauge"></canvas>
+            <div class="absolute bottom-0 inset-x-0 text-center">
+              <span class="text-2xl font-bold text-neutral-900">+20</span>
+              <p class="text-[10px] text-neutral-400 font-medium">Swift Turnaround</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-neutral-100 pt-4 mt-6 space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="flex items-center gap-2 font-medium text-emerald-700">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Promoters (9-10)
+            </span>
+            <span class="font-bold text-neutral-800">4 (20%)</span>
+          </div>
+          <div class="flex items-center justify-between text-xs">
+            <span class="flex items-center gap-2 font-medium text-amber-700">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Passives (7-8)
+            </span>
+            <span class="font-bold text-neutral-800">8 (40%)</span>
+          </div>
+          <div class="flex items-center justify-between text-xs">
+            <span class="flex items-center gap-2 font-medium text-rose-700">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Detractors (1-6)
+            </span>
+            <span class="font-bold text-neutral-800">8 (40%)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Breakdown of Responses Donut -->
+      <div class="glass-card p-6">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-neutral-500 mb-2">Responses by Server</h2>
+        <p class="text-xs text-neutral-400 mb-4">Direct feedback coverage per rostered staff member</p>
+        <div class="relative h-48">
+          <canvas id="waiterDonut"></canvas>
+        </div>
+        <div class="flex justify-center gap-4 mt-4 text-xs">
+          <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-400"></span> Alice (40%)</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Bob (40%)</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-300"></span> Charlie (20%)</span>
+        </div>
+      </div>
+
+      <!-- Feedback Word Cloud & Live Highlights -->
+      <div class="glass-card p-6 flex flex-col justify-between">
+        <div>
+          <h2 class="text-sm font-bold uppercase tracking-wider text-neutral-500 mb-4">Customer Sentiment Cloud</h2>
+          <div class="flex flex-wrap gap-2.5 items-center justify-center p-4 bg-neutral-50 rounded-xl border border-neutral-100 min-h-[160px]">
+            <span class="text-lg font-bold text-emerald-600">Friendly staff (8)</span>
+            <span class="text-base font-semibold text-indigo-600">Amazing waiter (6)</span>
+            <span class="text-sm font-medium text-neutral-700">Great service (5)</span>
+            <span class="text-sm font-medium text-rose-500">Too slow (3)</span>
+            <span class="text-xs font-normal text-amber-600">Messed up order (2)</span>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-neutral-100">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-neutral-500">Cross-Venue Benchmark</span>
+            <span class="font-bold text-neutral-900">+14% vs Suburb Avg</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Store Benchmarking & Real-Time Log Table -->
+    <div class="glass-card p-6">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-base font-bold text-neutral-900">Live Table Feed</h2>
+          <p class="text-xs text-neutral-400">Instant customer entries streamed directly from Google Sheets</p>
+        </div>
+        <button onclick="refreshData()" class="text-xs border border-neutral-200 hover:bg-neutral-50 px-3 py-1.5 rounded-lg font-medium flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Sync Live Sheet
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-neutral-50 text-neutral-400 uppercase font-semibold border-y border-neutral-200">
+            <tr>
+              <th class="py-3 px-4">Time</th>
+              <th class="py-3 px-4">Table</th>
+              <th class="py-3 px-4">Server</th>
+              <th class="py-3 px-4">Score</th>
+              <th class="py-3 px-4">Speed</th>
+              <th class="py-3 px-4">Guest Comments</th>
+              <th class="py-3 px-4">Reward Won</th>
+            </tr>
+          </thead>
+          <tbody id="liveTableBody" class="divide-y divide-neutral-100">
+            <tr class="hover:bg-neutral-50">
+              <td class="py-3 px-4 text-neutral-500">Just now</td>
+              <td class="py-3 px-4 font-bold text-neutral-900">Table 04</td>
+              <td class="py-3 px-4 font-medium">Alice</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">5 ★</span></td>
+              <td class="py-3 px-4 text-neutral-600">+20 (Paced)</td>
+              <td class="py-3 px-4 text-neutral-600">"Super quick tonight, thank you Alice!"</td>
+              <td class="py-3 px-4 font-mono font-medium text-indigo-600">Free Flat White</td>
+            </tr>
+            <tr class="hover:bg-neutral-50">
+              <td class="py-3 px-4 text-neutral-500">12 min ago</td>
+              <td class="py-3 px-4 font-bold text-neutral-900">Table 12</td>
+              <td class="py-3 px-4 font-medium">Bob</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-bold">2 ★</span></td>
+              <td class="py-3 px-4 text-rose-600">-60 (Slow)</td>
+              <td class="py-3 px-4 text-neutral-600">"Waited 20 mins for our drink order."</td>
+              <td class="py-3 px-4 font-mono font-medium text-indigo-600">10% Off Next Meal</td>
+            </tr>
+            <tr class="hover:bg-neutral-50">
+              <td class="py-3 px-4 text-neutral-500">25 min ago</td>
+              <td class="py-3 px-4 font-bold text-neutral-900">Table 19</td>
+              <td class="py-3 px-4 font-medium">Alice</td>
+              <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">5 ★</span></td>
+              <td class="py-3 px-4 text-neutral-600">+40 (Prompt)</td>
+              <td class="py-3 px-4 text-neutral-600">"Great wine recommendations from Alice."</td>
+              <td class="py-3 px-4 font-mono font-medium text-indigo-600">Free Dessert</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Initialize Speed Semi-Doughnut Gauge
+    const ctxGauge = document.getElementById('speedGauge').getContext('2d');
+    new Chart(ctxGauge, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [40, 30, 30],
+          backgroundColor: ['#EF4444', '#F59E0B', '#10B981'],
+          borderWidth: 0,
+          circumference: 180,
+          rotation: 270,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { tooltip: { enabled: false } },
+        cutout: '75%'
+      }
+    });
+
+    // Initialize Waiter Donut
+    const ctxDonut = document.getElementById('waiterDonut').getContext('2d');
+    new Chart(ctxDonut, {
+      type: 'doughnut',
+      data: {
+        labels: ['Alice', 'Bob', 'Charlie'],
+        datasets: [{
+          data: [8, 8, 4],
+          backgroundColor: ['#818CF8', '#34D399', '#FDA4AF'],
+          borderWidth: 2,
+          borderColor: '#FFFFFF'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        cutout: '70%'
+      }
+    });
+
+    function filterData() {
+      // Client-side filtering logic
+      console.log("Filtering dashboard view...");
+    }
+
+    function refreshData() {
+      console.log("Syncing from Google Sheet Webhook...");
+    }
+  </script>
+</body>
+</html>
