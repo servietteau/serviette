@@ -107,9 +107,7 @@
         <h2 id="restaurantTitle" class="display-font text-2xl sm:text-3xl font-black text-slate-950 tracking-tight leading-tight">The Charlie Glebe</h2>
         <div class="flex items-center gap-2 mt-1">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="text-xs font-bold text-slate-600 uppercase tracking-wider" id="headerTableBadge">Table 04</span>
-          <span class="text-slate-300">•</span>
-          <span class="text-[11px] font-semibold text-slate-500">Live Service</span>
+          <span class="text-xs font-bold text-slate-600 uppercase tracking-wider" id="headerTableBadge">Table 01</span>         
         </div>
       </div>
     </div>
@@ -130,7 +128,7 @@
     </div>
 
     <div class="p-5 rounded-2xl bg-amber-50 border-2 border-amber-200 space-y-2 text-center">
-      <span class="text-[10px] font-black uppercase tracking-widest text-amber-800 bg-amber-200/80 px-2.5 py-0.5 rounded-full">Active Table Reward</span>
+      <span class="text-[10px] font-black uppercase tracking-widest text-amber-800 bg-amber-200/80 px-2.5 py-0.5 rounded-full">Active  Reward</span>
       <h3 id="lockedRewardName" class="display-font text-xl font-black text-slate-900">Free Signature Dessert</h3>
       <div class="inline-block px-4 py-2 bg-white border-2 border-slate-900 rounded-xl font-mono font-black text-lg text-slate-900" id="lockedRewardCode">
         SRV-0000
@@ -140,7 +138,7 @@
 
     <div class="pt-3 border-t border-slate-100">
       <button onclick="promptStaffReset()" class="text-xs font-bold text-slate-400 hover:text-slate-700 underline">
-        Floor Staff: Reset Table for Next Booking
+        Floor Staff: Reset  for Next Booking
       </button>
     </div>
   </main>
@@ -155,13 +153,13 @@
       <div class="relative z-10 flex items-center justify-between gap-4">
         <div class="space-y-1.5 max-w-[62%] sm:max-w-[66%]">
           <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-900 bg-amber-200/60 px-2.5 py-0.5 rounded-full inline-block">
-            Table Experience
+             Experience
           </span>
           <h1 class="display-font text-xl sm:text-2xl font-black text-slate-900 leading-tight">
             Let us know more about your service
           </h1>
           <p class="text-xs text-slate-600 font-medium leading-relaxed">
-            Takes 15 seconds • Directly recognises your server and unlocks your instant table perk.
+            Takes 15 seconds • Directly recognises your server and unlocks your instant  perk.
           </p>
         </div>
 
@@ -174,19 +172,19 @@
       </div>
     </div>
 
-    <!-- 1. TABLE NUMBER -->
-    <div id="group-table" class="rounded-2xl p-2 transition-all">
+    <!-- 1.  NUMBER -->
+    <div id="group-" class="rounded-2xl p-2 transition-all">
       <div class="flex items-center justify-between mb-1.5">
         <span class="text-xs font-black uppercase tracking-wider text-slate-400">
           QUESTION 01 <span class="text-rose-500">*</span>
         </span>
-        <span class="error-indicator hidden text-[11px] font-bold text-rose-600">Please select a table</span>
+        <span class="error-indicator hidden text-[11px] font-bold text-rose-600">Please select a </span>
       </div>
       <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug mb-2">
-        What table number are you seated at?
+        What  number are you seated at?
       </h3>
-      <select id="tableInput" class="w-full p-3.5 sm:p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl font-bold text-base text-slate-900 focus:outline-none focus:border-slate-900 transition">
-        <option value="" disabled selected>Select your table number...</option>
+      <select id="Input" class="w-full p-3.5 sm:p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl font-bold text-base text-slate-900 focus:outline-none focus:border-slate-900 transition">
+        <option value="" disabled selected>Select your  number...</option>
       </select>
     </div>
 
@@ -423,6 +421,13 @@
       <div class="pt-5 border-t border-amber-200/80 flex flex-col items-center justify-center gap-2">
         <a href="https://serviette.com.au" target="_blank" class="hover:scale-105 transition-transform" title="Discover Serviette.com.au">
           <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Powered by Service Intelligence</p>
+
+          <div class="flex items-center gap-1.5">
+      <span>Powered by</span>
+      <span class="font-extrabold text-slate-800">Serviette Intelligence</span>
+    </div>
+    <span class="text-[10px] text-slate-400">&copy; 2026 Serviette Australia • All rights reserved</span>
+          
           <div id="rewardPageLogoMount"></div>
         </a>
       </div>
@@ -455,7 +460,6 @@
     <div class="flex items-center gap-1.5">
       <span>Powered by</span>
       <span class="font-extrabold text-slate-800">Serviette Intelligence</span>
-      <span>• Sydney, NSW</span>
     </div>
     <span class="text-[10px] text-slate-400">&copy; 2026 Serviette Australia • All rights reserved</span>
   </footer>
@@ -723,7 +727,7 @@
     function promptStaffReset() {
       const pin = prompt("Waitstaff: Enter 4-digit PIN to reset table for next seating:", "");
       if (pin === "8888" || pin === "1234") {
-        const curTable = tableSelect.value || urlTable || "4";
+        const curTable = tableSelect.value || urlTable || "01";
         localStorage.removeItem(getTableLockKey(curTable));
         alert(`Table ${curTable} reset successfully for the next booking.`);
         window.location.reload();
