@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=Outfit:wght@600;700;800;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   
   <style>
     body {
@@ -20,8 +20,9 @@
       -webkit-tap-highlight-color: transparent;
     }
     .display-font { font-family: 'Outfit', sans-serif; }
+    .serif-brand { font-family: 'Playfair Display', Georgia, serif; }
 
-    /* Elevated Card Container */
+    /* Elevated Apple-grade Container */
     .bouncy-card {
       background: #FFFFFF;
       border-radius: 28px;
@@ -31,26 +32,19 @@
       .bouncy-card { border-radius: 36px; }
     }
 
-    /* Gold Star Micro-Interactions */
+    /* Star Micro-Interactions */
     .star-btn {
       touch-action: manipulation;
       min-height: 48px;
     }
     .star-icon {
-      transition: transform 0.15s ease, color 0.15s ease;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease, filter 0.2s ease;
     }
     .star-btn:hover .star-icon {
       transform: scale(1.18);
     }
     .star-btn:active .star-icon {
       transform: scale(0.9);
-    }
-
-    /* HiDPI Crisp Asset Rendering */
-    .crisp-logo {
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: crisp-edges;
-      mix-blend-mode: multiply;
     }
 
     /* High Affordance Primary Action Button */
@@ -68,7 +62,7 @@
       transform: scale(0.98) translateY(0);
     }
 
-    /* Dynamic NPS Slider styling */
+    /* Dynamic NPS Slider */
     input[type=range] {
       -webkit-appearance: none;
       width: 100%;
@@ -97,11 +91,42 @@
 </head>
 <body class="p-3.5 sm:p-6 antialiased flex flex-col items-center justify-between min-h-screen">
 
-  <!-- ================= HEADER WITH ELEVATED VENUE VISIBILITY ================= -->
+  <!-- ================= ULTRA-CRISP SVG LOGO TEMPLATE ================= -->
+  <template id="servietteLogoSvg">
+    <div class="flex items-center gap-2 select-none">
+      <!-- Silver Tray & Magnifying Glass Icon -->
+      <svg class="h-8 sm:h-9 w-auto" viewBox="0 0 120 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Magnifying Glass with Chart Bars -->
+        <g id="magnifier">
+          <circle cx="68" cy="23" r="16" stroke="#0F172A" stroke-width="3" fill="#FFFFFF"/>
+          <line x1="79" y1="34" x2="89" y2="44" stroke="#0F172A" stroke-width="4.5" stroke-linecap="round"/>
+          <!-- Orange, Green, Blue Bars -->
+          <rect x="58" y="24" width="4" height="9" fill="#EA580C" rx="1"/>
+          <rect x="65" y="17" width="4" height="16" fill="#16A34A" rx="1"/>
+          <rect x="72" y="11" width="4" height="22" fill="#2563EB" rx="1"/>
+        </g>
+        <!-- Tray Serif text -->
+        <text x="68" y="47" font-family="'Playfair Display', serif" font-size="8" font-weight="700" fill="#0F172A" text-anchor="middle" letter-spacing="1">SERVIETTE.</text>
+        <!-- Silver Tray Platter -->
+        <path d="M22 52H114C114 52 110 57 98 57H38C26 57 22 52 22 52Z" fill="#0F172A"/>
+        <line x1="18" y1="52" x2="118" y2="52" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Tuxedo Arm & Hand -->
+        <path d="M4 72L18 58L28 66L14 74H4V72Z" fill="#0F172A"/>
+        <path d="M28 66L42 55C46 51 54 53 58 55L76 55C80 55 83 58 83 60C73 63 60 67 48 70L28 66Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="2.2" stroke-linejoin="round"/>
+        <line x1="20" y1="60" x2="25" y2="64" stroke="#FFFFFF" stroke-width="2"/>
+      </svg>
+      <!-- Heavy Sans-serif Brand Title with Orange Square Dot -->
+      <span class="display-font text-lg sm:text-xl font-black tracking-tight text-slate-950 flex items-baseline leading-none">
+        SERVIETTE<span class="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 bg-[#EA580C] ml-0.5 rounded-[2px]"></span>
+      </span>
+    </div>
+  </template>
+
+  <!-- ================= HEADER: VENUE IDENTITY + SERVIETTE BADGE ================= -->
   <header class="w-full max-w-xl flex items-center justify-between py-2 px-1 mb-2 relative z-30 bg-transparent">
-    <!-- VENUE BRAND IDENTITY (PROMINENT & HIGH VISUAL WEIGHT) -->
+    <!-- VENUE BRAND IDENTITY -->
     <div class="flex items-center gap-3.5">
-      <div id="venueAvatarBox" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white p-1 shadow-md border-2 border-slate-900/10 flex items-center justify-center shrink-0">
+      <div id="venueAvatarBox" class="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-white p-1 shadow-md border-2 border-slate-900/10 flex items-center justify-center shrink-0">
         <img id="venueLogoImg" src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=320&q=85" alt="Venue Brand" class="w-full h-full object-cover rounded-xl">
       </div>
       <div>
@@ -115,24 +140,20 @@
       </div>
     </div>
 
-    <!-- SERVIETTE BADGE LINKING TO HOMEPAGE -->
-    <a href="https://serviette.com.au" class="group flex items-center gap-2 bg-white px-3 sm:px-3.5 py-1.5 rounded-2xl border border-slate-200 shadow-sm hover:border-slate-400 transition shrink-0 ml-2" title="Powered by Serviette">
-      <img src="serviette-logo.png" onerror="this.src='logo.png'" alt="Serviette" class="h-7 sm:h-8 w-auto object-contain crisp-logo group-hover:scale-105 transition-transform">
-      <div class="text-left hidden xs:block">
-        <span class="display-font text-xs font-black tracking-tight text-slate-900 block leading-none">SERVIETTE<span class="text-amber-500">.</span></span>
-        <span class="text-[8px] font-extrabold uppercase tracking-widest text-slate-400">Australia</span>
-      </div>
+    <!-- CLEAN CRISP SERVIETTE HEADER LOCKUP -->
+    <a href="https://serviette.com.au" target="_blank" class="group flex items-center bg-white px-3 py-1.5 rounded-2xl border border-slate-200 shadow-sm hover:border-slate-400 transition shrink-0 ml-2" title="Powered by Serviette">
+      <div id="headerLogoMount"></div>
     </a>
   </header>
 
-  <!-- ================= TABLE LOCKED MODAL (90-MIN WINDOW) ================= -->
+  <!-- ================= TABLE LOCKED MODAL ================= -->
   <main id="tableLockedCard" class="hidden w-full max-w-xl bouncy-card p-6 sm:p-10 my-auto text-center space-y-5 z-10">
     <div class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-3xl mx-auto flex items-center justify-center text-3xl shadow-sm">
       ✓
     </div>
     <div>
       <h2 class="display-font text-2xl sm:text-3xl font-black text-slate-900 leading-tight">Table Feedback Lodged</h2>
-      <p class="text-xs sm:text-sm text-slate-500 mt-1 font-medium">Feedback has already been submitted for this seating.</p>
+      <p class="text-xs sm:text-sm text-slate-500 mt-1 font-medium">Feedback has already been lodged for this table seating.</p>
     </div>
 
     <div class="p-5 rounded-2xl bg-amber-50 border-2 border-amber-200 space-y-2 text-center">
@@ -144,10 +165,9 @@
       <p class="text-[11px] text-slate-500">Show this voucher to your waitstaff before settling your bill.</p>
     </div>
 
-    <!-- WAITSTAFF RESET LINK -->
     <div class="pt-3 border-t border-slate-100">
       <button onclick="promptStaffReset()" class="text-xs font-bold text-slate-400 hover:text-slate-700 underline">
-        Floor Staff: Reset Table for New Booking
+        Floor Staff: Reset Table for Next Booking
       </button>
     </div>
   </main>
@@ -155,13 +175,13 @@
   <!-- ================= GUEST FEEDBACK CARD ================= -->
   <main id="feedbackCard" class="w-full max-w-xl bouncy-card p-5 sm:p-9 my-2 space-y-6 z-10 relative">
 
-    <!-- REFINED HERO CARD (SOFT DUAL-TONE + INTEGRATED VENUE PHOTOGRAPHY + ENLARGED ILLUSTRATION) -->
+    <!-- HERO CARD: SEAMLESS VENUE BRAND INTEGRATION -->
     <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-stone-200/80 bg-gradient-to-br from-[#FDFBF7] via-[#F8F4ED] to-[#F1ECE2] p-5 sm:p-6 shadow-sm">
-      <!-- Subtle Ambient Venue Photography Layer -->
-      <div id="heroPhotoBackdrop" class="absolute inset-0 bg-cover bg-center opacity-[0.14] pointer-events-none mix-blend-multiply" style="background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80');"></div>
+      <!-- Ambient Backdrop Overlay -->
+      <div id="heroPhotoBackdrop" class="absolute inset-0 bg-cover bg-center opacity-[0.12] pointer-events-none mix-blend-multiply"></div>
 
       <div class="relative z-10 flex items-center justify-between gap-4">
-        <div class="space-y-1.5 max-w-[62%] sm:max-w-[65%]">
+        <div class="space-y-1.5 max-w-[62%] sm:max-w-[66%]">
           <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-900 bg-amber-200/60 px-2.5 py-0.5 rounded-full inline-block">
             Table Experience
           </span>
@@ -173,14 +193,16 @@
           </p>
         </div>
 
-        <!-- ENLARGED HOSPITALITY VISUAL ANCHOR -->
+        <!-- SEAMLESS VENUE LOGO EMBED -->
         <div class="shrink-0 flex items-center justify-center">
-          <img src="waiter-table.png" onerror="this.src='waiter-star.png'" alt="Service Illustration" class="w-28 h-28 sm:w-36 sm:h-36 object-contain drop-shadow-md hover:scale-105 transition-transform duration-300">
+          <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl p-2.5 bg-white/90 backdrop-blur-md shadow-lg shadow-black/5 border border-stone-200/80 flex items-center justify-center overflow-hidden hover:scale-105 transition-transform duration-300">
+            <img id="heroVenueLogo" src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=320&q=85" alt="Venue Brandmark" class="w-full h-full object-cover rounded-2xl">
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 1. TABLE NUMBER (REQUIRED) -->
+    <!-- 1. TABLE NUMBER -->
     <div id="group-table" class="rounded-2xl p-2 transition-all">
       <div class="flex items-center justify-between mb-1.5">
         <span class="text-xs font-black uppercase tracking-wider text-slate-400">
@@ -196,7 +218,7 @@
       </select>
     </div>
 
-    <!-- 2. SERVER SELECTION (PLAIN TEXT — NO STARS) -->
+    <!-- 2. SERVER SELECTION -->
     <div id="group-server" class="pt-4 border-t border-slate-100 rounded-2xl p-2 transition-all">
       <div class="flex items-center justify-between mb-1.5">
         <span class="text-xs font-black uppercase tracking-wider text-slate-400">
@@ -212,35 +234,35 @@
       </div>
     </div>
 
-    <!-- 3. QUESTION: MENU KNOWLEDGE (GOLD STARS) -->
+    <!-- 3. QUESTION: MENU KNOWLEDGE (PASCAL RED TO GOLD CHROMATIC SCALE) -->
     <div id="group-q3" class="pt-4 border-t border-slate-100 rounded-2xl p-2 transition-all">
       <div class="flex items-center justify-between mb-1.5">
         <span class="text-xs font-black text-slate-400 uppercase tracking-wider">
           QUESTION 03 <span class="text-rose-500">*</span>
         </span>
-        <span id="labelQ3" class="text-xs font-black text-amber-500">Tap a star</span>
+        <span id="labelQ3" class="text-xs font-black px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">Tap a star</span>
       </div>
       <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug mb-3">
         My server was knowledgeable of the menu items and was able to answer my questions?
       </h3>
       <div class="flex justify-between items-center bg-slate-50/80 p-2 sm:p-3 rounded-2xl border border-slate-200" data-group="q3">
-        <button type="button" onclick="setOriginalGoldStar('q3', 1)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q3', 1)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">1</span>
         </button>
-        <button type="button" onclick="setOriginalGoldStar('q3', 2)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q3', 2)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">2</span>
         </button>
-        <button type="button" onclick="setOriginalGoldStar('q3', 3)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q3', 3)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">3</span>
         </button>
-        <button type="button" onclick="setOriginalGoldStar('q3', 4)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q3', 4)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">4</span>
         </button>
-        <button type="button" onclick="setOriginalGoldStar('q3', 5)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q3', 5)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">5 ★</span>
         </button>
@@ -248,35 +270,35 @@
       <span class="error-indicator hidden text-[11px] font-bold text-rose-600 mt-1 block">Please rate this question</span>
     </div>
 
-    <!-- 4. QUESTION: PRESENTATION & ATTITUDE (GOLD STARS) -->
+    <!-- 4. QUESTION: PRESENTATION & ATTITUDE -->
     <div id="group-q4" class="pt-4 border-t border-slate-100 rounded-2xl p-2 transition-all">
       <div class="flex items-center justify-between mb-1.5">
         <span class="text-xs font-black text-slate-400 uppercase tracking-wider">
           QUESTION 04 <span class="text-rose-500">*</span>
         </span>
-        <span id="labelQ4" class="text-xs font-black text-amber-500">Tap a star</span>
+        <span id="labelQ4" class="text-xs font-black px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">Tap a star</span>
       </div>
       <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug mb-3">
         My server was appropriately presented, had a positive attitude and communicated clearly and politely?
       </h3>
       <div class="flex justify-between items-center bg-slate-50/80 p-2 sm:p-3 rounded-2xl border border-slate-200" data-group="q4">
-        <button type="button" onclick="setOriginalGoldStar('q4', 1)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q4', 1)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">1</span>
         </button>
-        <button type="button" onclick="setOriginalGoldStar('q4', 2)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q4', 2)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">2</span>
         </button>
-        <button type="button" onclick="setOriginalGoldStar('q4', 3)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q4', 3)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">3</span>
         </button>
-        <button type="button" onclick="setOriginalGoldStar('q4', 4)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q4', 4)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">4</span>
         </button>
-        <button type="button" onclick="setOriginalGoldStar('q4', 5)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q4', 5)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">5 ★</span>
         </button>
@@ -284,35 +306,35 @@
       <span class="error-indicator hidden text-[11px] font-bold text-rose-600 mt-1 block">Please rate this question</span>
     </div>
 
-    <!-- 5. QUESTION: ATTENTIVE / FELT AT HOME (GOLD STARS) -->
+    <!-- 5. QUESTION: ATTENTIVE / FELT AT HOME -->
     <div id="group-q5" class="pt-4 border-t border-slate-100 rounded-2xl p-2 transition-all">
       <div class="flex items-center justify-between mb-1.5">
         <span class="text-xs font-black text-slate-400 uppercase tracking-wider">
           QUESTION 05 <span class="text-rose-500">*</span>
         </span>
-        <span id="labelQ5" class="text-xs font-black text-amber-500">Tap a star</span>
+        <span id="labelQ5" class="text-xs font-black px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">Tap a star</span>
       </div>
       <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug mb-3">
         My server was attentive and offered a unique experience by making me feel at home?
       </h3>
       <div class="flex justify-between items-center bg-slate-50/80 p-2 sm:p-3 rounded-2xl border border-slate-200" data-group="q5">
-        <button type="button" onclick="setOriginalGoldStar('q5', 1)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q5', 1)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">1</span>
         </button>
-        <button type="button" onclick="setOriginalGoldStar('q5', 2)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q5', 2)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">2</span>
         </button>
-        <button type="button" onclick="setOriginalGoldStar('q5', 3)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q5', 3)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">3</span>
         </button>
-        <button type="button" onclick="setOriginalGoldStar('q5', 4)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q5', 4)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">4</span>
         </button>
-        <button type="button" onclick="setOriginalGoldStar('q5', 5)" class="star-btn flex-1 flex flex-col items-center">
+        <button type="button" onclick="setChromaticRating('q5', 5)" class="star-btn flex-1 flex flex-col items-center">
           <svg class="w-10 h-10 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="text-[11px] font-black mt-1 text-slate-400">5 ★</span>
         </button>
@@ -320,7 +342,7 @@
       <span class="error-indicator hidden text-[11px] font-bold text-rose-600 mt-1 block">Please rate this question</span>
     </div>
 
-    <!-- 6. QUESTION: REVERTED NPS SLIDER (DYNAMIC COLOUR FILL ON TRACK) -->
+    <!-- 6. QUESTION: REVERTED NPS SLIDER -->
     <div id="group-nps" class="pt-4 border-t border-slate-100 rounded-2xl p-2 transition-all">
       <div class="flex items-center justify-between mb-1.5">
         <span class="text-xs font-black text-slate-400 uppercase tracking-wider">
@@ -339,7 +361,7 @@
       </div>
     </div>
 
-    <!-- 7. QUESTION: MANAGER NOTE (OPTIONAL) -->
+    <!-- 7. QUESTION: MANAGER NOTE -->
     <div class="pt-4 border-t border-slate-100 p-2">
       <div class="flex items-center justify-between mb-1">
         <span class="text-xs font-black text-slate-400 uppercase tracking-wider">QUESTION 07</span>
@@ -366,18 +388,14 @@
         Takes 15 seconds • Unlocks table reward voucher
       </p>
 
-      <!-- SERVIETTE FOOTER LINK -->
-      <a href="https://serviette.com.au" target="_blank" class="inline-flex items-center justify-center gap-2 mt-5 pt-4 border-t border-slate-100 hover:opacity-80 transition" title="Visit Serviette Website">
-        <img src="serviette-logo.png" onerror="this.src='logo.png'" alt="Serviette" class="h-7 w-auto object-contain crisp-logo">
-        <div class="text-left">
-          <span class="display-font text-xs font-black tracking-tight text-slate-800 block leading-none">SERVIETTE<span class="text-amber-500">.</span></span>
-          <span class="text-[9px] font-extrabold uppercase tracking-widest text-slate-400">serviette.com.au</span>
-        </div>
+      <!-- RESTORED SERVIETTE INTELLIGENCE BOTTOM FOOTER -->
+      <a href="https://serviette.com.au" target="_blank" class="inline-flex items-center justify-center gap-2.5 mt-5 pt-4 border-t border-slate-100 hover:opacity-80 transition" title="Visit Serviette Website">
+        <div id="footerFeedbackLogoMount"></div>
       </a>
     </div>
   </main>
 
-  <!-- ================= SPIN THE WHEEL SCREEN (EXPANDED FOR DESKTOP) ================= -->
+  <!-- ================= SPIN THE WHEEL SCREEN ================= -->
   <main id="wheelScreen" class="hidden w-full max-w-xl bouncy-card p-6 sm:p-10 my-4 text-center space-y-6 z-10">
     <div class="inline-block px-4 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black uppercase tracking-widest">
       Review Logged • Instant Reward Unlocked
@@ -388,17 +406,14 @@
       <p class="text-xs sm:text-sm text-slate-500 mt-1 font-medium">Thank you for recognising our floor team today.</p>
     </div>
 
-    <!-- WHEEL CONTAINER (SCALED UP FOR DESKTOP: 440PX) -->
+    <!-- WHEEL CONTAINER (440PX DESKTOP) -->
     <div class="relative w-72 h-72 sm:w-[440px] sm:h-[440px] mx-auto flex items-center justify-center my-2">
-      <!-- Pointer Indicator -->
       <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-30 w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[28px] border-t-slate-950 drop-shadow-xl"></div>
-      
-      <!-- High-DPI Canvas Element -->
       <canvas id="wheelCanvas" class="rounded-full shadow-2xl border-4 border-white max-w-full h-auto"></canvas>
       
-      <!-- ENLARGED CENTRE LOGO HUB WITH CRISP ASSET -->
-      <div class="absolute w-20 h-20 sm:w-28 sm:h-28 bg-white rounded-full border-4 border-slate-900 ring-4 ring-amber-400/20 flex items-center justify-center shadow-2xl z-20">
-        <img src="serviette-logo.png" onerror="this.src='logo.png'" alt="Serviette Logo" class="w-12 h-12 sm:w-16 sm:h-16 object-contain crisp-logo">
+      <!-- CRISP SERVIETTE TRAY LOGO IN WHEEL CENTRE -->
+      <div class="absolute w-20 h-20 sm:w-28 sm:h-28 bg-white rounded-full border-4 border-slate-900 ring-4 ring-amber-400/20 flex items-center justify-center shadow-2xl z-20 overflow-hidden p-2">
+        <div id="wheelCentreLogoMount"></div>
       </div>
     </div>
 
@@ -427,19 +442,26 @@
         </button>
       </div>
 
-      <!-- SUBTLE UNDERSTATED "KNOW MORE" BUTTON -->
-      <div class="pt-4 border-t border-amber-200/60">
+      <div class="pt-3 border-t border-amber-200/60">
         <button type="button" onclick="toggleTermsModal(true)" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 transition py-1 px-3 rounded-full hover:bg-amber-100/50">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <span>Know more & redemption terms</span>
         </button>
       </div>
+
+      <!-- PROMINENT SERVIETTE BOTTOM LOGO LINK ON REWARD PAGE -->
+      <div class="pt-5 border-t border-amber-200/80 flex flex-col items-center justify-center gap-1.5">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Powered by Service Intelligence</p>
+        <a href="https://serviette.com.au" target="_blank" class="hover:scale-105 transition-transform" title="Discover Serviette.com.au">
+          <div id="rewardPageLogoMount"></div>
+        </a>
+      </div>
     </div>
   </main>
 
-  <!-- ================= UNDERSTATED TERMS & CONDITIONS DRAWER ================= -->
+  <!-- TERMS MODAL -->
   <div id="termsModal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
-    <div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-slate-200 space-y-4 text-left animate-in fade-in zoom-in-95 duration-200">
+    <div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-slate-200 space-y-4 text-left">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <h4 class="display-font text-lg font-black text-slate-900">Reward Terms & Details</h4>
         <button onclick="toggleTermsModal(false)" class="p-1 rounded-full text-slate-400 hover:text-slate-800">
@@ -450,7 +472,7 @@
         <p>• <strong>Single Redemption:</strong> Limited to one voucher per table seating.</p>
         <p>• <strong>How to Redeem:</strong> Present your voucher code to your waitstaff prior to requesting the final bill.</p>
         <p>• <strong>Conditions:</strong> Reward cannot be exchanged for cash, credited, or combined with third-party discount apps.</p>
-        <p>• <strong>Feedback Integrity:</strong> Responses are anonymised and fed directly to floor management to reward outstanding service standards under Australian hospitality guidelines.</p>
+        <p>• <strong>Feedback Integrity:</strong> Feedback is instantly processed by Serviette Intelligence to reward floor excellence.</p>
       </div>
       <button onclick="toggleTermsModal(false)" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl transition">
         Understood, Close
@@ -458,19 +480,52 @@
     </div>
   </div>
 
-  <footer class="text-center py-4 text-xs font-semibold text-slate-400 z-10">
-    &copy; 2026 Serviette Intelligence Australia • All rights reserved
+  <!-- RESTORED SERVIETTE INTELLIGENCE BOTTOM FOOTER -->
+  <footer class="text-center py-5 text-xs font-semibold text-slate-400 z-10 flex flex-col items-center gap-1">
+    <div class="flex items-center gap-1.5">
+      <span>Powered by</span>
+      <span class="font-extrabold text-slate-800">Serviette Intelligence</span>
+      <span>• Sydney, NSW</span>
+    </div>
+    <span class="text-[10px] text-slate-400">&copy; 2026 Serviette Australia • All rights reserved</span>
   </footer>
 
   <script>
     const GOOGLE_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbysWCgxoxfUSioWDDO7fZsJNLoPmBjm7PB1jMhNu1ucIKggezWnHKhUy5piUzF7nOILlA/exec";
 
-    // Multi-tenant Restaurant Configurations (Australian Hospitality Venues)
+    // Inject Vector Logo into mounts
+    function mountLogos() {
+      const template = document.getElementById('servietteLogoSvg');
+      ['headerLogoMount', 'footerFeedbackLogoMount', 'rewardPageLogoMount'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.appendChild(template.content.cloneNode(true));
+      });
+      
+      // Wheel Centre Icon
+      const wheelMount = document.getElementById('wheelCentreLogoMount');
+      if (wheelMount) {
+        wheelMount.innerHTML = `
+          <svg class="w-12 h-12 sm:w-16 sm:h-16" viewBox="0 0 120 75" fill="none">
+            <circle cx="68" cy="23" r="16" stroke="#0F172A" stroke-width="3" fill="#FFFFFF"/>
+            <line x1="79" y1="34" x2="89" y2="44" stroke="#0F172A" stroke-width="4.5" stroke-linecap="round"/>
+            <rect x="58" y="24" width="4" height="9" fill="#EA580C" rx="1"/>
+            <rect x="65" y="17" width="4" height="16" fill="#16A34A" rx="1"/>
+            <rect x="72" y="11" width="4" height="22" fill="#2563EB" rx="1"/>
+            <text x="68" y="47" font-family="'Playfair Display', serif" font-size="8" font-weight="700" fill="#0F172A" text-anchor="middle">SERVIETTE.</text>
+            <path d="M22 52H114C114 52 110 57 98 57H38C26 57 22 52 22 52Z" fill="#0F172A"/>
+            <line x1="18" y1="52" x2="118" y2="52" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M4 72L18 58L28 66L14 74H4V72Z" fill="#0F172A"/>
+            <path d="M28 66L42 55C46 51 54 53 58 55L76 55C80 55 83 58 83 60C73 63 60 67 48 70L28 66Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="2.2"/>
+          </svg>
+        `;
+      }
+    }
+
+    // Venues
     const RESTAURANTS = {
       'thecharlie': {
         name: 'The Charlie Glebe',
         logo: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=85',
-        backdrop: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80',
         tables: 16,
         servers: ['Alice', 'Bob', 'Charlie', 'Sam', 'Ella'],
         prizes: ['Free Flat White', '10% Off Bill', 'Free Dessert', '$15 Next Visit', 'Chef Surprise', 'Free Wine Glass']
@@ -478,7 +533,6 @@
       'yochi': {
         name: 'Yo-Chi Bondi',
         logo: 'https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=400&q=85',
-        backdrop: 'https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=1200&q=80',
         tables: 12,
         servers: ['Jordan', 'Mia', 'Liam', 'Lucas'],
         prizes: ['Free Topping Cup', '15% Off Tub', 'Free Drink', 'Bonus Swirl', 'Sticker Pack', 'BOGO 50% Off']
@@ -494,9 +548,8 @@
     document.getElementById('restaurantTitle').innerText = store.name;
     if (store.logo) {
       document.getElementById('venueLogoImg').src = store.logo;
-    }
-    if (store.backdrop) {
-      document.getElementById('heroPhotoBackdrop').style.backgroundImage = `url('${store.backdrop}')`;
+      document.getElementById('heroVenueLogo').src = store.logo;
+      document.getElementById('heroPhotoBackdrop').style.backgroundImage = `url('${store.logo}')`;
     }
 
     // Populate Tables
@@ -518,7 +571,7 @@
       checkTableLockout();
     };
 
-    // Populate Server Roster (Plain Text — No Stars)
+    // Populate Server Roster
     const serverGrid = document.getElementById('serverSelectionGrid');
     let chosenServer = null;
     store.servers.forEach((server) => {
@@ -537,22 +590,30 @@
       serverGrid.appendChild(btn);
     });
 
-    // Ratings State
+    // CHROMATIC STAR SENTIMENT SCALE (Pascal Red to Gold)
+    const chromaticScale = {
+      1: { color: '#DC2626', shadow: 'rgba(220, 38, 38, 0.45)', text: '1 / 5 — Needs Work', badge: 'bg-rose-100 text-rose-800' },
+      2: { color: '#EA580C', shadow: 'rgba(234, 88, 12, 0.45)', text: '2 / 5 — Fair', badge: 'bg-orange-100 text-orange-800' },
+      3: { color: '#D97706', shadow: 'rgba(217, 119, 6, 0.45)', text: '3 / 5 — Satisfactory', badge: 'bg-amber-100 text-amber-800' },
+      4: { color: '#16A34A', shadow: 'rgba(22, 163, 74, 0.45)', text: '4 / 5 — Great', badge: 'bg-emerald-100 text-emerald-800' },
+      5: { color: '#EAB308', shadow: 'rgba(234, 179, 8, 0.55)', text: '5 / 5 — Exceptional ★', badge: 'bg-amber-100 text-amber-900' }
+    };
+
     const ratings = { q3: null, q4: null, q5: null, nps: 10 };
 
-    // Gold Star Rating Function
-    function setOriginalGoldStar(group, score) {
+    function setChromaticRating(group, score) {
       ratings[group] = score;
       clearError(`group-${group}`);
       const container = document.querySelector(`[data-group="${group}"]`);
       const buttons = container.querySelectorAll('.star-btn');
+      const theme = chromaticScale[score];
 
       buttons.forEach((btn, idx) => {
         const svg = btn.querySelector('svg');
         const numLabel = btn.querySelector('span');
         if (idx < score) {
-          svg.style.color = '#F59E0B'; // Australian Hospitality Amber-Gold
-          svg.style.filter = 'drop-shadow(0 2px 8px rgba(245, 158, 11, 0.45))';
+          svg.style.color = theme.color;
+          svg.style.filter = `drop-shadow(0 2px 8px ${theme.shadow})`;
           numLabel.style.color = '#0F172A';
         } else {
           svg.style.color = '#E2E8F0';
@@ -561,9 +622,9 @@
         }
       });
 
-      const labelMap = { 1: 'Needs Work', 2: 'Fair', 3: 'Satisfactory', 4: 'Great', 5: 'Exceptional ★' };
-      document.getElementById(`label${group.toUpperCase()}`).innerText = `${score} / 5 — ${labelMap[score]}`;
-      document.getElementById(`label${group.toUpperCase()}`).style.color = '#F59E0B';
+      const labelEl = document.getElementById(`label${group.toUpperCase()}`);
+      labelEl.className = `text-xs font-black px-2.5 py-0.5 rounded-full ${theme.badge}`;
+      labelEl.innerText = theme.text;
     }
 
     // NPS Dynamic Slider
@@ -573,13 +634,13 @@
       const slider = document.getElementById('npsInput');
       const pct = (val / 10) * 100;
 
-      let trackColor = '#10B981'; // 9-10 Emerald
+      let trackColor = '#16A34A';
       if (val <= 6) {
-        trackColor = '#EF4444'; // 0-6 Pascal Red
+        trackColor = '#DC2626'; // Pascal Red
         badge.className = "text-xs font-black px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800";
         badge.innerText = `${val} / 10 — Needs Attention`;
       } else if (val <= 8) {
-        trackColor = '#F59E0B'; // 7-8 Amber
+        trackColor = '#D97706';
         badge.className = "text-xs font-black px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800";
         badge.innerText = `${val} / 10 — Likely`;
       } else {
@@ -628,243 +689,4 @@
         if (!ratings[q]) {
           triggerError(`group-${q}`);
           isValid = false;
-          if (!firstErrorEl) firstErrorEl = document.getElementById(`group-${q}`);
-        }
-      });
-
-      if (!isValid) {
-        if (firstErrorEl) firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-      }
-
-      const btn = document.getElementById('mainSubmitBtn');
-      const label = document.getElementById('btnLabelText');
-      const icon = document.getElementById('btnIconWrapper');
-      const spinner = document.getElementById('btnSpinner');
-
-      btn.disabled = true;
-      icon.classList.add('hidden');
-      spinner.classList.remove('hidden');
-      label.innerText = "Transmitting feedback...";
-
-      setTimeout(() => {
-        document.getElementById('feedbackCard').classList.add('hidden');
-        document.getElementById('wheelScreen').classList.remove('hidden');
-        initHiDPIWheel();
-        drawWheel();
-      }, 550);
-    }
-
-    // ================= TABLE LOCK ENGINE (PER-SEATING 90-MIN EXPIRY) =================
-    const SEATING_DURATION_MS = 90 * 60 * 1000;
-
-    function getTableLockKey(tNum) {
-      return `serviette_table_lock_${storeKey}_${tNum}`;
-    }
-
-    function checkTableLockout() {
-      const curTable = tableSelect.value || urlTable;
-      if (!curTable) return;
-
-      const raw = localStorage.getItem(getTableLockKey(curTable));
-      if (raw) {
-        try {
-          const lockData = JSON.parse(raw);
-          const elapsed = Date.now() - lockData.timestamp;
-
-          if (elapsed < SEATING_DURATION_MS) {
-            document.getElementById('feedbackCard').classList.add('hidden');
-            document.getElementById('tableLockedCard').classList.remove('hidden');
-            document.getElementById('lockedRewardName').innerText = lockData.reward || 'Table Reward';
-            document.getElementById('lockedRewardCode').innerText = lockData.voucher || 'SRV-LOCKED';
-            return;
-          } else {
-            localStorage.removeItem(getTableLockKey(curTable));
-          }
-        } catch(e) {}
-      }
-
-      document.getElementById('tableLockedCard').classList.add('hidden');
-      document.getElementById('feedbackCard').classList.remove('hidden');
-    }
-
-    function promptStaffReset() {
-      const pin = prompt("Waitstaff: Enter 4-digit PIN to reset table for next seating:", "");
-      if (pin === "8888" || pin === "1234") {
-        const curTable = tableSelect.value || urlTable || "4";
-        localStorage.removeItem(getTableLockKey(curTable));
-        alert(`Table ${curTable} reset successfully for the next booking.`);
-        window.location.reload();
-      } else if (pin !== null) {
-        alert("Incorrect PIN.");
-      }
-    }
-    checkTableLockout();
-
-    // ================= HIGH-DPI CANVAS WHEEL WITH CURVED / RIM LABELS =================
-    const canvas = document.getElementById('wheelCanvas');
-    const ctx = canvas.getContext('2d');
-    
-    // Consistent Australian Hospitality Palette: Pascal Red, Warm Gold, Deep Obsidian, Warm Terracotta, Jade Sage
-    const wheelColors = ["#DC2626", "#D97706", "#1E293B", "#C2410C", "#0D9488", "#B45309"];
-    let angle = 0;
-    let spinning = false;
-    let baseDimension = 440; // Desktop default
-
-    function initHiDPIWheel() {
-      const isMobile = window.innerWidth < 640;
-      baseDimension = isMobile ? 288 : 440;
-      const dpr = window.devicePixelRatio || 2;
-      
-      canvas.width = baseDimension * dpr;
-      canvas.height = baseDimension * dpr;
-      canvas.style.width = `${baseDimension}px`;
-      canvas.style.height = `${baseDimension}px`;
-      
-      ctx.scale(dpr, dpr);
-    }
-
-    function drawWheel() {
-      const numSegs = store.prizes.length;
-      const segRad = (2 * Math.PI) / numSegs;
-      const centre = baseDimension / 2;
-      const radius = centre - 6;
-
-      ctx.clearRect(0, 0, baseDimension, baseDimension);
-
-      for (let i = 0; i < numSegs; i++) {
-        const start = angle + (i * segRad);
-        const end = start + segRad;
-
-        // Draw Wedge Slice
-        ctx.beginPath();
-        ctx.moveTo(centre, centre);
-        ctx.arc(centre, centre, radius, start, end);
-        ctx.fillStyle = wheelColors[i % wheelColors.length];
-        ctx.fill();
-        ctx.strokeStyle = "#FFFFFF";
-        ctx.lineWidth = 3;
-        ctx.stroke();
-
-        // Legible Text Rendering (Arranged for instant readability)
-        ctx.save();
-        ctx.translate(centre, centre);
-        ctx.rotate(start + segRad / 2);
-        
-        ctx.fillStyle = "#FFFFFF";
-        ctx.textAlign = "right";
-        ctx.textBaseline = "middle";
-        
-        const fontSize = baseDimension > 350 ? 14 : 11;
-        ctx.font = `800 ${fontSize}px 'Plus Jakarta Sans', sans-serif`;
-        ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 1;
-        ctx.shadowOffsetY = 1;
-
-        // Split text cleanly if needed
-        const prizeLabel = store.prizes[i];
-        if (prizeLabel.length > 13 && prizeLabel.includes(' ')) {
-          const parts = prizeLabel.split(' ');
-          const line1 = parts.slice(0, Math.ceil(parts.length / 2)).join(' ');
-          const line2 = parts.slice(Math.ceil(parts.length / 2)).join(' ');
-          ctx.fillText(line1, radius - 20, -7);
-          ctx.fillText(line2, radius - 20, 8);
-        } else {
-          ctx.fillText(prizeLabel, radius - 20, 0);
-        }
-
-        ctx.restore();
-      }
-    }
-
-    function executeSpin() {
-      if (spinning) return;
-      spinning = true;
-      document.getElementById('spinBtn').disabled = true;
-
-      const randomIdx = Math.floor(Math.random() * store.prizes.length);
-      const rotations = 6 * 360;
-      const segAngle = 360 / store.prizes.length;
-      const targetAngle = rotations + (270 - (randomIdx * segAngle + segAngle / 2));
-      
-      let startTime = null;
-      const duration = 4200;
-
-      function frame(timestamp) {
-        if (!startTime) startTime = timestamp;
-        const progress = Math.min((timestamp - startTime) / duration, 1);
-        const ease = 1 - Math.pow(1 - progress, 4); // Quartic ease out
-        angle = ((ease * targetAngle) * Math.PI) / 180;
-        drawWheel();
-
-        if (progress < 1) {
-          requestAnimationFrame(frame);
-        } else {
-          const wonPrize = store.prizes[randomIdx];
-          const generatedCode = "SRV-" + Math.floor(1000 + Math.random() * 9000);
-
-          confetti({ particleCount: 160, spread: 90, origin: { y: 0.6 } });
-          document.getElementById('prizeTitle').innerText = wonPrize;
-          document.getElementById('codeDisplay').innerText = generatedCode;
-          document.getElementById('rewardBox').classList.remove('hidden');
-          document.getElementById('spinBtn').classList.add('hidden');
-
-          // Save Lockout
-          localStorage.setItem(getTableLockKey(tableSelect.value), JSON.stringify({
-            reward: wonPrize,
-            voucher: generatedCode,
-            timestamp: Date.now()
-          }));
-
-          // Transmit to Google Apps Script Webhook
-          const payload = {
-            restaurant: store.name,
-            table: tableSelect.value,
-            server: chosenServer,
-            q3_knowledge: ratings.q3,
-            q4_attitude: ratings.q4,
-            q5_home: ratings.q5,
-            q6_nps: ratings.nps,
-            q7_notes: document.getElementById('noteInput').value,
-            reward: wonPrize,
-            voucher: generatedCode
-          };
-
-          fetch(GOOGLE_SCRIPT_WEB_APP_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-          });
-        }
-      }
-      requestAnimationFrame(frame);
-    }
-
-    function copyCode() {
-      const code = document.getElementById('codeDisplay').innerText;
-      navigator.clipboard.writeText(code);
-      alert(`Voucher code ${code} copied! Show it to your server before settling your bill.`);
-    }
-
-    function saveCodePrompt() {
-      const code = document.getElementById('codeDisplay').innerText;
-      const prize = document.getElementById('prizeTitle').innerText;
-      prompt("Copy and save your reward confirmation:", `${store.name} Table Reward: ${prize} | Voucher Code: ${code}`);
-    }
-
-    function toggleTermsModal(show) {
-      document.getElementById('termsModal').classList.toggle('hidden', !show);
-    }
-
-    // Resize listener for HiDPI Wheel
-    window.addEventListener('resize', () => {
-      if (!document.getElementById('wheelScreen').classList.contains('hidden')) {
-        initHiDPIWheel();
-        drawWheel();
-      }
-    });
-  </script>
-</body>
-</html>
+          if (!firstErrorEl)
