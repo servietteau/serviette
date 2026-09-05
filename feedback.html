@@ -20,260 +20,285 @@
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
       min-height: 100vh;
       background-color: #FAF8F5;
       color: #0F172A;
       overflow-x: hidden;
-      position: relative;
+      -webkit-tap-highlight-color: transparent;
     }
     .display-font { font-family: 'Outfit', sans-serif; }
 
-    /* Ambient Background Watermark */
-    #ambientWatermark {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(1.4);
-      width: 500px;
-      height: 500px;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: contain;
-      opacity: 0.04;
-      filter: grayscale(100%) blur(2px);
-      pointer-events: none;
-      z-index: 0;
-      transition: background-image 0.4s ease;
-    }
-
-    #venueBackdropPhoto {
-      position: fixed;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      opacity: 0.035;
-      pointer-events: none;
-      z-index: 0;
-      transition: background-image 0.4s ease;
-    }
-
+    /* Crisp Card Container */
     .bouncy-card {
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(20px);
-      border-radius: 32px;
-      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.9);
-      position: relative;
-      z-index: 10;
+      background: #FFFFFF;
+      border-radius: 28px;
+      box-shadow: 0 12px 36px -10px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.04);
+    }
+    @media (min-width: 640px) {
+      .bouncy-card { border-radius: 36px; }
     }
 
-    /* Tactile Interactive Star Buttons */
-    .star-icon {
-      transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Star Rating Tactile Micro-Interactions */
+    .star-btn {
+      touch-action: manipulation;
+      min-height: 48px;
     }
-    .star-btn:hover .star-icon {
-      transform: scale(1.22) translateY(-2px);
+    .star-icon {
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s ease, filter 0.15s ease;
     }
     .star-btn:active .star-icon {
-      transform: scale(0.9);
+      transform: scale(0.85);
+    }
+
+    /* Field Validation State */
+    .field-error {
+      border-color: #E11D48 !important;
+      background-color: #FFF1F2 !important;
+      box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.12) !important;
+      animation: gentleShake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+    @keyframes gentleShake {
+      10%, 90% { transform: translateX(-2px); }
+      20%, 80% { transform: translateX(3px); }
+      30%, 50%, 70% { transform: translateX(-4px); }
+      40%, 60% { transform: translateX(4px); }
+    }
+
+    /* High Affordance Primary Button */
+    .btn-submit-action {
+      background: #0F172A;
+      color: #FFFFFF;
+      box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.3), 0 2px 4px rgba(15, 23, 42, 0.1);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-submit-action:active {
+      transform: scale(0.97);
+      box-shadow: 0 6px 14px -2px rgba(15, 23, 42, 0.25);
     }
 
     .serviette-seamless {
       mix-blend-mode: multiply;
       filter: contrast(1.15);
     }
-
-    /* Tactile Submit Button Affordance */
-    .btn-submit-action {
-      background: #0F172A;
-      color: #FFFFFF;
-      box-shadow: 0 14px 28px -6px rgba(15, 23, 42, 0.25), 0 2px 4px rgba(15, 23, 42, 0.1);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-    }
-    .btn-submit-action:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 32px -6px rgba(15, 23, 42, 0.32);
-    }
-    .btn-submit-action:active {
-      transform: scale(0.98) translateY(0);
-    }
   </style>
 </head>
-<body class="p-3 sm:p-6 antialiased flex flex-col items-center justify-between">
+<body class="p-3.5 sm:p-6 antialiased flex flex-col items-center justify-between min-h-screen">
 
-  <!-- Subtle Watermark and Backdrop Layers -->
-  <div id="ambientWatermark"></div>
-  <div id="venueBackdropPhoto"></div>
-
-  <!-- Header: Subtle Ambient Lockup & Prominent Serviette Mark -->
-  <header class="w-full max-w-xl flex items-center justify-between py-3 px-2 z-10">
-    <div>
-      <h2 id="restaurantTitle" class="display-font text-2xl font-black text-slate-900 tracking-tight leading-none">The Charlie Glebe</h2>
-      <div class="flex items-center gap-2 mt-1.5">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider" id="headerTableBadge">Table 04</span>
+  <!-- ================= TOP HEADER (PROPER Z-INDEX LAYERING) ================= -->
+  <header class="w-full max-w-xl flex items-center justify-between py-2 px-1 mb-2 z-20">
+    <!-- VENUE BADGE: FULLY VISIBLE, SHARP, NEVER COVERED -->
+    <div class="flex items-center gap-3">
+      <div id="venueAvatarBox" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white p-1 shadow-sm border border-slate-200/80 flex items-center justify-center shrink-0">
+        <img id="venueLogoImg" src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=160&q=80" alt="Restaurant Logo" class="w-full h-full object-cover rounded-xl">
+      </div>
+      <div>
+        <h2 id="restaurantTitle" class="display-font text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-none">The Charlie Glebe</h2>
+        <div class="flex items-center gap-2 mt-1">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider" id="headerTableBadge">Table 04</span>
+        </div>
       </div>
     </div>
 
-    <!-- Official Serviette Silver Tray Logo -->
-    <div class="flex items-center gap-2 bg-white/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-200/60 shadow-sm">
-      <img src="serviette-logo.png" onerror="this.src='logo.png'" alt="Serviette" class="h-8 w-auto object-contain serviette-seamless">
+    <!-- SERVIETTE OFFICIAL BADGE -->
+    <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-200/70 shadow-sm shrink-0">
+      <img src="serviette-logo.png" onerror="this.src='logo.png'" alt="Serviette" class="h-6 w-auto object-contain serviette-seamless">
       <span class="display-font text-xs font-black tracking-tight text-slate-900">SERVIETTE<span class="text-orange-500">.</span></span>
     </div>
   </header>
 
-  <!-- Guest Feedback Form Container -->
-  <main id="feedbackCard" class="w-full max-w-xl bouncy-card p-6 sm:p-9 my-4 space-y-7">
+  <!-- ================= PREVIOUS SUBMISSION LOCKOUT CARD (ANTI-DUPLICATE) ================= -->
+  <main id="alreadySubmittedCard" class="hidden w-full max-w-xl bouncy-card p-6 sm:p-10 my-auto text-center space-y-5 z-10">
+    <div class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-3xl mx-auto flex items-center justify-center text-3xl shadow-sm">
+      ✓
+    </div>
+    <div>
+      <h2 class="display-font text-2xl sm:text-3xl font-black text-slate-900 leading-tight">Thank You For Your Feedback!</h2>
+      <p class="text-xs sm:text-sm text-slate-500 mt-1 font-medium">You have already submitted a review for this sitting.</p>
+    </div>
 
-    <!-- Refined, Softer Hero Section -->
-    <div class="relative overflow-hidden rounded-3xl border border-orange-100/60 p-6 sm:p-7" style="background: radial-gradient(circle at 100% 0%, #FFF7ED 0%, #FFFAF5 60%, #FFFFFF 100%);">
-      <div id="heroPhotoBackdrop" class="absolute right-0 top-0 bottom-0 w-1/2 opacity-10 bg-cover bg-center pointer-events-none rounded-r-3xl"></div>
-      
-      <div class="relative z-10 flex items-center justify-between gap-4">
-        <div class="max-w-[65%]">
-          <span class="text-[10px] font-black uppercase tracking-widest text-orange-700 bg-orange-100/80 px-2.5 py-1 rounded-full inline-block mb-2.5">
+    <div class="p-5 rounded-2xl bg-amber-50 border-2 border-amber-200 space-y-2 text-center">
+      <span class="text-[10px] font-black uppercase tracking-widest text-amber-800 bg-amber-200/80 px-2.5 py-0.5 rounded-full">Your Active Reward</span>
+      <h3 id="lockedRewardName" class="display-font text-xl font-black text-slate-900">Free Signature Dessert</h3>
+      <div class="inline-block px-4 py-2 bg-white border-2 border-slate-900 rounded-xl font-mono font-black text-lg text-slate-900" id="lockedRewardCode">
+        SRV-0000
+      </div>
+      <p class="text-[11px] text-slate-500">Show this voucher to your waiter before final payment.</p>
+    </div>
+
+    <button onclick="clearVisitLockout()" class="text-xs font-bold text-slate-400 hover:text-slate-700 underline">
+      Admin Test: Reset lockout on this device
+    </button>
+  </main>
+
+  <!-- ================= GUEST FEEDBACK CARD ================= -->
+  <main id="feedbackCard" class="w-full max-w-xl bouncy-card p-5 sm:p-9 my-2 space-y-6 z-10">
+
+    <!-- REFINED, SOFTER HERO SECTION WITH CLEAR VISUAL ANCHOR -->
+    <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-amber-200/40 bg-gradient-to-br from-amber-50/70 via-orange-50/30 to-white">
+      <div class="flex items-center justify-between gap-3">
+        <div class="space-y-1 sm:space-y-1.5 max-w-[62%]">
+          <span class="text-[10px] font-extrabold uppercase tracking-widest text-orange-700 bg-orange-100/90 px-2.5 py-0.5 rounded-full inline-block">
             Quick Floor Review
           </span>
-          <h1 class="display-font text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+          <h1 class="display-font text-xl sm:text-2xl font-black text-slate-900 leading-tight">
             Let us know more about your service
           </h1>
-          <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1.5">
-            Your review directly rewards our floor waitstaff & unlocks your instant table perk.
+          <p class="text-xs text-slate-500 font-medium">
+            Takes 10 seconds • Directly rewards our waitstaff & unlocks your instant table perk.
           </p>
         </div>
-        <!-- Enlarged Hospitality Illustration Anchor -->
-        <div class="relative shrink-0">
-          <img src="waiter-table.png" onerror="this.src='waiter-star.png'" alt="Service" class="w-28 h-28 sm:w-36 sm:h-36 object-contain drop-shadow-md">
+        <!-- PROMINENT HOSPITALITY ILLUSTRATION (POSITIONED CLEANLY, NEVER COVERING LOGO) -->
+        <div class="shrink-0">
+          <img src="waiter-table.png" onerror="this.src='waiter-star.png'" alt="Service" class="w-24 h-24 sm:w-32 sm:h-32 object-contain drop-shadow-sm">
         </div>
       </div>
     </div>
 
-    <!-- 1. Table Number Selection -->
-    <div>
-      <div class="flex items-center justify-between mb-2">
-        <label class="text-xs font-black uppercase tracking-wider text-slate-400">1. Table Number</label>
-        <span class="text-[11px] font-semibold text-slate-400">Confirm your table</span>
+    <!-- 1. TABLE NUMBER (REQUIRED) -->
+    <div id="group-table" class="rounded-2xl p-2 transition-all">
+      <div class="flex items-center justify-between mb-1.5">
+        <label class="text-xs font-black uppercase tracking-wider text-slate-500">
+          1. Table Number <span class="text-rose-500">*</span>
+        </label>
+        <span class="error-indicator hidden text-[11px] font-bold text-rose-600">Please select a table</span>
       </div>
-      <select id="tableInput" class="w-full p-3.5 bg-slate-50 border-2 border-slate-200/80 rounded-2xl font-black text-base text-slate-800 focus:outline-none focus:border-slate-900 transition">
-        <!-- Populated via JavaScript -->
+      <select id="tableInput" class="w-full p-3.5 sm:p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl font-bold text-base text-slate-900 focus:outline-none focus:border-slate-900 transition">
+        <option value="" disabled selected>Select your table number...</option>
       </select>
     </div>
 
-    <!-- 2. Server Selection (Plain Text - No Stars) -->
-    <div>
-      <label class="block text-xs font-black uppercase tracking-wider text-slate-400 mb-2">2. Who was your server today?</label>
-      <div class="grid grid-cols-3 gap-2.5" id="serverSelectionGrid">
-        <!-- Populated via JavaScript -->
+    <!-- 2. SERVER SELECTION (PLAIN TEXT — NO STARS) (REQUIRED) -->
+    <div id="group-server" class="rounded-2xl p-2 transition-all">
+      <div class="flex items-center justify-between mb-1.5">
+        <label class="text-xs font-black uppercase tracking-wider text-slate-500">
+          2. Who was your server today? <span class="text-rose-500">*</span>
+        </label>
+        <span class="error-indicator hidden text-[11px] font-bold text-rose-600">Please select your server</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="serverSelectionGrid">
+        <!-- Injected via JS -->
       </div>
     </div>
 
-    <!-- 3. Question: Menu Knowledge (Gradient Stars) -->
-    <div class="pt-5 border-t border-slate-100">
+    <!-- 3. QUESTION: MENU KNOWLEDGE (REQUIRED) -->
+    <div id="group-q3" class="pt-4 border-t border-slate-100 rounded-2xl p-2 transition-all">
       <div class="flex items-center justify-between mb-1.5">
-        <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Question 03</span>
-        <span id="labelQ3" class="text-xs font-black text-amber-500">5 / 5 — Exceptional</span>
+        <span class="text-xs font-black text-slate-400 uppercase tracking-wider">
+          Question 03 <span class="text-rose-500">*</span>
+        </span>
+        <span id="labelQ3" class="text-xs font-black text-slate-400">Tap a star</span>
       </div>
-      <h3 class="text-base sm:text-lg font-bold text-slate-900 leading-snug mb-3">
+      <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug mb-3">
         My server was knowledgeable of the menu items and was able to answer my questions?
       </h3>
-      <div class="flex justify-between items-center bg-slate-50/80 p-3 rounded-2xl border border-slate-200/80" data-group="q3">
+      <div class="flex justify-between items-center bg-slate-50/80 p-2 sm:p-3 rounded-2xl border border-slate-200" data-group="q3">
         <button type="button" onclick="setGradientStar('q3', 1)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-400">1</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">1</span>
         </button>
         <button type="button" onclick="setGradientStar('q3', 2)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-400">2</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">2</span>
         </button>
         <button type="button" onclick="setGradientStar('q3', 3)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-400">3</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">3</span>
         </button>
         <button type="button" onclick="setGradientStar('q3', 4)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-400">4</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">4</span>
         </button>
         <button type="button" onclick="setGradientStar('q3', 5)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-900">5</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">5</span>
         </button>
       </div>
+      <span class="error-indicator hidden text-[11px] font-bold text-rose-600 mt-1 block">Please rate this question</span>
     </div>
 
-    <!-- 4. Question: Presentation & Attitude (Gradient Stars) -->
-    <div class="pt-5 border-t border-slate-100">
+    <!-- 4. QUESTION: PRESENTATION & ATTITUDE (REQUIRED) -->
+    <div id="group-q4" class="pt-4 border-t border-slate-100 rounded-2xl p-2 transition-all">
       <div class="flex items-center justify-between mb-1.5">
-        <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Question 04</span>
-        <span id="labelQ4" class="text-xs font-black text-amber-500">5 / 5 — Flawless</span>
+        <span class="text-xs font-black text-slate-400 uppercase tracking-wider">
+          Question 04 <span class="text-rose-500">*</span>
+        </span>
+        <span id="labelQ4" class="text-xs font-black text-slate-400">Tap a star</span>
       </div>
-      <h3 class="text-base sm:text-lg font-bold text-slate-900 leading-snug mb-3">
+      <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug mb-3">
         My server was appropriately presented, had a positive attitude and communicated clearly and politely?
       </h3>
-      <div class="flex justify-between items-center bg-slate-50/80 p-3 rounded-2xl border border-slate-200/80" data-group="q4">
+      <div class="flex justify-between items-center bg-slate-50/80 p-2 sm:p-3 rounded-2xl border border-slate-200" data-group="q4">
         <button type="button" onclick="setGradientStar('q4', 1)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-400">1</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">1</span>
         </button>
         <button type="button" onclick="setGradientStar('q4', 2)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-400">2</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">2</span>
         </button>
         <button type="button" onclick="setGradientStar('q4', 3)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-400">3</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">3</span>
         </button>
         <button type="button" onclick="setGradientStar('q4', 4)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-400">4</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">4</span>
         </button>
         <button type="button" onclick="setGradientStar('q4', 5)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-900">5</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">5</span>
         </button>
       </div>
+      <span class="error-indicator hidden text-[11px] font-bold text-rose-600 mt-1 block">Please rate this question</span>
     </div>
 
-    <!-- 5. Question: Attentive / Felt at Home (Gradient Stars) -->
-    <div class="pt-5 border-t border-slate-100">
+    <!-- 5. QUESTION: ATTENTIVE / FELT AT HOME (REQUIRED) -->
+    <div id="group-q5" class="pt-4 border-t border-slate-100 rounded-2xl p-2 transition-all">
       <div class="flex items-center justify-between mb-1.5">
-        <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Question 05</span>
-        <span id="labelQ5" class="text-xs font-black text-amber-500">5 / 5 — Felt like family</span>
+        <span class="text-xs font-black text-slate-400 uppercase tracking-wider">
+          Question 05 <span class="text-rose-500">*</span>
+        </span>
+        <span id="labelQ5" class="text-xs font-black text-slate-400">Tap a star</span>
       </div>
-      <h3 class="text-base sm:text-lg font-bold text-slate-900 leading-snug mb-3">
+      <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug mb-3">
         My server was attentive and offered a unique experience by making me feel at home?
       </h3>
-      <div class="flex justify-between items-center bg-slate-50/80 p-3 rounded-2xl border border-slate-200/80" data-group="q5">
+      <div class="flex justify-between items-center bg-slate-50/80 p-2 sm:p-3 rounded-2xl border border-slate-200" data-group="q5">
         <button type="button" onclick="setGradientStar('q5', 1)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-400">1</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">1</span>
         </button>
         <button type="button" onclick="setGradientStar('q5', 2)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-400">2</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">2</span>
         </button>
         <button type="button" onclick="setGradientStar('q5', 3)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-400">3</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">3</span>
         </button>
         <button type="button" onclick="setGradientStar('q5', 4)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-400">4</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">4</span>
         </button>
         <button type="button" onclick="setGradientStar('q5', 5)" class="star-btn flex-1 flex flex-col items-center">
-          <svg class="w-10 h-10 star-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <span class="text-xs font-bold mt-1 text-slate-900">5</span>
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 star-icon text-slate-200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="text-[11px] font-black mt-1 text-slate-400">5</span>
         </button>
       </div>
+      <span class="error-indicator hidden text-[11px] font-bold text-rose-600 mt-1 block">Please rate this question</span>
     </div>
 
-    <!-- 6. Question: Recommendation Likelihood (NPS) -->
-    <div class="pt-5 border-t border-slate-100">
-      <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Question 06</span>
-        <span id="npsDisplayScore" class="text-xs font-black px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full">10 / 10 — Definitely!</span>
+    <!-- 6. QUESTION: RECOMMENDATION LIKELIHOOD (NPS) (REQUIRED) -->
+    <div id="group-nps" class="pt-4 border-t border-slate-100 rounded-2xl p-2 transition-all">
+      <div class="flex items-center justify-between mb-1.5">
+        <span class="text-xs font-black text-slate-400 uppercase tracking-wider">
+          Question 06 <span class="text-rose-500">*</span>
+        </span>
+        <span id="npsDisplayScore" class="text-xs font-black px-2.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-full">10 / 10 — Definitely!</span>
       </div>
-      <h3 class="text-base sm:text-lg font-bold text-slate-900 leading-snug mb-3">
+      <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug mb-3">
         How likely are you to recommend this restaurant to your family or friend?
       </h3>
       <input type="range" id="npsInput" min="0" max="10" value="10" oninput="handleNPSChange(this.value)" class="w-full h-3 bg-slate-200 rounded-xl appearance-none cursor-pointer accent-slate-900">
@@ -284,47 +309,62 @@
       </div>
     </div>
 
-    <!-- 7. Question: Message for the Floor Manager -->
-    <div class="pt-5 border-t border-slate-100">
-      <span class="text-xs font-black text-slate-400 uppercase tracking-wider block mb-1.5">Question 07</span>
-      <h3 class="text-base sm:text-lg font-bold text-slate-900 leading-snug mb-2">
+    <!-- 7. QUESTION: MANAGER NOTE (OPTIONAL) -->
+    <div class="pt-4 border-t border-slate-100 p-2">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Question 07</span>
+        <span class="text-[11px] font-bold text-slate-400 uppercase">Optional</span>
+      </div>
+      <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug mb-2">
         Would you like to share more information with the manager?
       </h3>
-      <textarea id="noteInput" rows="3" placeholder="Tell us what made your visit special or anything we can do better next time..." class="w-full p-4 bg-slate-50/80 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:border-slate-900 transition resize-none"></textarea>
+      <textarea id="noteInput" rows="2" placeholder="Tell us what made your visit special or anything we can do better next time..." class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-base sm:text-sm font-medium focus:outline-none focus:border-slate-900 transition resize-none"></textarea>
     </div>
 
-    <!-- Redesigned Tactile Submit Button with Loading State -->
-    <div class="pt-2">
-      <button id="mainSubmitBtn" type="button" onclick="initiateSubmitFlow()" class="btn-submit-action w-full py-4 sm:py-5 px-6 rounded-2xl font-black text-base sm:text-lg flex items-center justify-center gap-3">
+    <!-- SUBMIT ACTION WITH SPINNER & DUAL BRAND FOOTER -->
+    <div class="pt-2 text-center">
+      <button id="mainSubmitBtn" type="button" onclick="validateAndSubmit()" class="btn-submit-action w-full py-4 sm:py-5 px-6 rounded-2xl font-black text-base sm:text-lg flex items-center justify-center gap-3">
         <span id="btnLabelText">Submit & Spin For Table Reward</span>
         <span id="btnIconWrapper" class="text-xl">🎁</span>
-        <!-- Spinner SVG (Hidden initially) -->
         <svg id="btnSpinner" class="hidden animate-spin h-5 w-5 text-white" viewBox="0 0 24 24" fill="none">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
         </svg>
       </button>
-      <p class="text-center text-[11px] font-semibold text-slate-400 mt-2">Takes 10 seconds • Unlocks table reward voucher</p>
+
+      <!-- MICRO-COPY -->
+      <p class="text-[11px] font-semibold text-slate-400 mt-2.5">
+        Takes 10 seconds • Unlocks table reward voucher
+      </p>
+
+      <!-- FOOTER BRANDING DIRECTLY BENEATH SUBMIT -->
+      <div class="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-slate-100">
+        <img src="serviette-logo.png" onerror="this.src='logo.png'" alt="Serviette" class="h-9 w-auto object-contain serviette-seamless">
+        <div class="text-left">
+          <span class="display-font text-xs font-black tracking-tight text-slate-800 block leading-none">SERVIETTE<span class="text-orange-500">.</span></span>
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-slate-400">Hospitality Intelligence</span>
+        </div>
+      </div>
     </div>
   </main>
 
-  <!-- Enlarged Spin The Wheel Screen -->
-  <main id="wheelScreen" class="hidden w-full max-w-xl bouncy-card p-6 sm:p-10 my-4 text-center space-y-6">
-    <div class="inline-block px-4 py-1.5 rounded-full bg-orange-100 text-orange-800 text-xs font-black uppercase tracking-widest">
+  <!-- ================= ENLARGED SPIN THE WHEEL REVEAL ================= -->
+  <main id="wheelScreen" class="hidden w-full max-w-xl bouncy-card p-6 sm:p-10 my-4 text-center space-y-6 z-10">
+    <div class="inline-block px-4 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black uppercase tracking-widest">
       Review Logged • Instant Reward Unlocked
     </div>
 
     <div>
       <h2 class="display-font text-3xl sm:text-4xl font-black text-slate-900 leading-tight">Spin For Your Table Perk!</h2>
-      <p class="text-sm text-slate-500 mt-1 font-medium">Thank you for helping us recognize our service team today.</p>
+      <p class="text-xs sm:text-sm text-slate-500 mt-1 font-medium">Thank you for recognizing our floor team today.</p>
     </div>
 
-    <!-- Extra Large Wheel Canvas -->
-    <div class="relative w-80 h-80 sm:w-96 sm:h-96 mx-auto flex items-center justify-center">
+    <!-- CANVAS WHEEL -->
+    <div class="relative w-72 h-72 sm:w-96 sm:h-96 mx-auto flex items-center justify-center">
       <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-30 w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[26px] border-t-slate-950 drop-shadow-xl"></div>
-      <canvas id="wheelCanvas" width="360" height="360" class="rounded-full shadow-2xl border-4 border-white"></canvas>
-      <div class="absolute w-20 h-20 bg-white rounded-full border-4 border-slate-900 flex items-center justify-center shadow-2xl z-20">
-        <img src="serviette-logo.png" onerror="this.src='logo.png'" alt="Serviette" class="w-12 h-12 object-contain serviette-seamless">
+      <canvas id="wheelCanvas" width="360" height="360" class="rounded-full shadow-2xl border-4 border-white max-w-full h-auto"></canvas>
+      <div class="absolute w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full border-4 border-slate-900 flex items-center justify-center shadow-2xl z-20">
+        <img src="serviette-logo.png" onerror="this.src='logo.png'" alt="Serviette" class="w-10 h-10 sm:w-12 sm:h-12 object-contain serviette-seamless">
       </div>
     </div>
 
@@ -332,11 +372,11 @@
       ⚡ TAP TO SPIN THE WHEEL ⚡
     </button>
 
-    <!-- Reward Confirmation Card -->
+    <!-- REWARD CONFIRMATION MODAL -->
     <div id="rewardBox" class="hidden p-6 rounded-3xl bg-amber-50 border-2 border-amber-300 space-y-4">
-      <span class="text-xs font-black uppercase tracking-widest text-amber-800 bg-amber-200/80 px-3 py-1 rounded-full">Winner!</span>
-      <h3 id="prizeTitle" class="display-font text-3xl font-black text-slate-900">Free Signature Dessert</h3>
-      <p class="text-xs text-slate-600 font-semibold">Show this voucher to your server before final payment:</p>
+      <span class="text-xs font-black uppercase tracking-widest text-amber-800 bg-amber-200/80 px-3 py-1 rounded-full">Reward Unlocked!</span>
+      <h3 id="prizeTitle" class="display-font text-2xl sm:text-3xl font-black text-slate-900">Free Signature Dessert</h3>
+      <p class="text-xs text-slate-600 font-semibold">Show this voucher to your server before payment:</p>
 
       <div class="flex items-center justify-center gap-2">
         <div id="codeDisplay" class="px-6 py-3 bg-white border-2 border-slate-900 rounded-2xl font-mono font-black text-2xl tracking-widest text-slate-900 shadow-md">
@@ -356,13 +396,13 @@
   </main>
 
   <footer class="text-center py-4 text-xs font-semibold text-slate-400 z-10">
-    Service Intelligence powered by <a href="index.html" class="font-bold text-slate-800 underline">Serviette</a>
+    &copy; 2026 Serviette Intelligence Australia • All rights reserved
   </footer>
 
   <script>
     const GOOGLE_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbysWCgxoxfUSioWDDO7fZsJNLoPmBjm7PB1jMhNu1ucIKggezWnHKhUy5piUzF7nOILlA/exec";
 
-    // Star Rating Color Scale Spec
+    // Dynamic Star Gradient Palette Spec
     const STAR_COLOR_MAP = {
       1: '#E11D48', // Pascal Red
       2: '#F97316', // Warm Amber-Coral
@@ -379,86 +419,79 @@
       5: '5 / 5 — Exceptional ★'
     };
 
-    // Multi-tenant Branding & Custom Wallpaper Profiles
+    // Multi-tenant Restaurant Configurations
     const RESTAURANTS = {
       'thecharlie': {
         name: 'The Charlie Glebe',
-        logo: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=300&q=80',
-        photos: ['https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80'],
-        wallpaper: 'https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=1400&q=80',
+        logo: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=240&q=80',
         tables: 16,
         servers: ['Alice', 'Bob', 'Charlie', 'Sam', 'Ella'],
         prizes: ['Free Flat White', '10% Off Bill', 'Free Dessert', '$15 Next Visit', 'Chef Surprise', 'Free Wine Glass']
       },
       'yochi': {
         name: 'Yo-Chi Bondi',
-        logo: 'https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=300&q=80',
-        photos: ['https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=80'],
-        wallpaper: 'https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=1400&q=80',
+        logo: 'https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=240&q=80',
         tables: 12,
         servers: ['Jordan', 'Mia', 'Liam', 'Lucas'],
         prizes: ['Free Topping Cup', '15% Off Tub', 'Free Drink', 'Bonus Swirl', 'Sticker Pack', 'BOGO 50% Off']
       }
     };
 
-    // Load Live Overrides from LocalStorage (Managed via Console)
+    // Load Venue Config (From LocalStorage or Fallback)
     const customVenues = JSON.parse(localStorage.getItem('serviette_venues') || '{}');
     const params = new URLSearchParams(window.location.search);
     const storeKey = params.get('venue') || 'thecharlie';
     const store = customVenues[storeKey] || RESTAURANTS[storeKey] || RESTAURANTS['thecharlie'];
 
-    // Apply Background Branding & Watermarks
+    // Setup Venue Branding
     document.getElementById('restaurantTitle').innerText = store.name;
     if (store.logo) {
-      document.getElementById('ambientWatermark').style.backgroundImage = `url('${store.logo}')`;
-    }
-    if (store.wallpaper) {
-      document.getElementById('venueBackdropPhoto').style.backgroundImage = `url('${store.wallpaper}')`;
-    }
-    if (store.photos && store.photos.length > 0) {
-      document.getElementById('heroPhotoBackdrop').style.backgroundImage = `url('${store.photos[0]}')`;
+      document.getElementById('venueLogoImg').src = store.logo;
     }
 
     // Populate Tables
     const tableSelect = document.getElementById('tableInput');
-    const urlTable = params.get('table') || '4';
-    document.getElementById('headerTableBadge').innerText = `Table ${urlTable < 10 ? '0' + parseInt(urlTable) : urlTable}`;
+    const urlTable = params.get('table');
     for (let i = 1; i <= store.tables; i++) {
       const opt = document.createElement('option');
       opt.value = i;
       opt.innerText = `Table ${i < 10 ? '0' + i : i}`;
-      if (parseInt(urlTable) === i) opt.selected = true;
+      if (urlTable && parseInt(urlTable) === i) opt.selected = true;
       tableSelect.appendChild(opt);
+    }
+    if (urlTable) {
+      document.getElementById('headerTableBadge').innerText = `Table ${urlTable < 10 ? '0' + parseInt(urlTable) : urlTable}`;
     }
     tableSelect.onchange = (e) => {
       document.getElementById('headerTableBadge').innerText = `Table ${e.target.value < 10 ? '0' + e.target.value : e.target.value}`;
+      clearError('group-table');
     };
 
-    // Populate Servers (Plain Text — No Stars)
+    // Populate Server Roster (Plain Text — No Stars)
     const serverGrid = document.getElementById('serverSelectionGrid');
-    let chosenServer = store.servers[0];
-    store.servers.forEach((server, index) => {
+    let chosenServer = null;
+    store.servers.forEach((server) => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.innerText = server;
-      btn.className = `p-3.5 border-2 rounded-2xl text-xs sm:text-sm font-bold tracking-tight transition ${
-        index === 0 ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-slate-50/80 text-slate-700 border-slate-200/80'
-      }`;
+      btn.className = 'p-3.5 border-2 rounded-2xl text-xs sm:text-sm font-bold tracking-tight bg-slate-50 text-slate-700 border-slate-200 transition';
       btn.onclick = () => {
         chosenServer = server;
+        clearError('group-server');
         serverGrid.querySelectorAll('button').forEach(b => {
-          b.className = 'p-3.5 border-2 rounded-2xl text-xs sm:text-sm font-bold tracking-tight bg-slate-50/80 text-slate-700 border-slate-200/80 transition';
+          b.className = 'p-3.5 border-2 rounded-2xl text-xs sm:text-sm font-bold tracking-tight bg-slate-50 text-slate-700 border-slate-200 transition';
         });
         btn.className = 'p-3.5 border-2 rounded-2xl text-xs sm:text-sm font-bold tracking-tight bg-slate-900 text-white border-slate-900 shadow-sm transition';
       };
       serverGrid.appendChild(btn);
     });
 
-    // Score Tracking with Dynamic Gradient Stars
-    const ratings = { q3: 5, q4: 5, q5: 5, nps: 10 };
+    // Score Tracking (Null initially to enforce mandatory answers)
+    const ratings = { q3: null, q4: null, q5: null, nps: 10 };
 
     function setGradientStar(group, score) {
       ratings[group] = score;
+      clearError(`group-${group}`);
       const container = document.querySelector(`[data-group="${group}"]`);
       const buttons = container.querySelectorAll('.star-btn');
       const activeColor = STAR_COLOR_MAP[score];
@@ -482,28 +515,73 @@
       labelEl.style.color = activeColor;
     }
 
-    // Initialize all star groups to 5 stars on load
-    setGradientStar('q3', 5);
-    setGradientStar('q4', 5);
-    setGradientStar('q5', 5);
-
     function handleNPSChange(val) {
       ratings.nps = parseInt(val);
       const badge = document.getElementById('npsDisplayScore');
       if (val >= 9) {
         badge.innerText = `${val} / 10 — Definitely!`;
-        badge.className = "text-xs font-black px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full";
+        badge.className = "text-xs font-black px-2.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-full";
       } else if (val >= 7) {
         badge.innerText = `${val} / 10 — Likely`;
-        badge.className = "text-xs font-black px-3 py-1 bg-amber-100 text-amber-800 rounded-full";
+        badge.className = "text-xs font-black px-2.5 py-0.5 bg-amber-100 text-amber-800 rounded-full";
       } else {
         badge.innerText = `${val} / 10 — Needs Attention`;
-        badge.className = "text-xs font-black px-3 py-1 bg-rose-100 text-rose-800 rounded-full";
+        badge.className = "text-xs font-black px-2.5 py-0.5 bg-rose-100 text-rose-800 rounded-full";
       }
     }
 
-    // Submit Flow with Loading State Transition
-    function initiateSubmitFlow() {
+    // ================= VALIDATION ENGINE =================
+    function triggerError(groupId) {
+      const el = document.getElementById(groupId);
+      if (!el) return;
+      el.classList.add('field-error');
+      const msg = el.querySelector('.error-indicator');
+      if (msg) msg.classList.remove('hidden');
+    }
+
+    function clearError(groupId) {
+      const el = document.getElementById(groupId);
+      if (!el) return;
+      el.classList.remove('field-error');
+      const msg = el.querySelector('.error-indicator');
+      if (msg) msg.classList.add('hidden');
+    }
+
+    function validateAndSubmit() {
+      let isValid = true;
+      let firstErrorEl = null;
+
+      // Validate Table
+      if (!tableSelect.value) {
+        triggerError('group-table');
+        isValid = false;
+        if (!firstErrorEl) firstErrorEl = document.getElementById('group-table');
+      }
+
+      // Validate Server
+      if (!chosenServer) {
+        triggerError('group-server');
+        isValid = false;
+        if (!firstErrorEl) firstErrorEl = document.getElementById('group-server');
+      }
+
+      // Validate Questions 3, 4, 5
+      ['q3', 'q4', 'q5'].forEach(q => {
+        if (!ratings[q]) {
+          triggerError(`group-${q}`);
+          isValid = false;
+          if (!firstErrorEl) firstErrorEl = document.getElementById(`group-${q}`);
+        }
+      });
+
+      if (!isValid) {
+        if (firstErrorEl) {
+          firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+
+      // Execute Submit Flow
       const btn = document.getElementById('mainSubmitBtn');
       const label = document.getElementById('btnLabelText');
       const icon = document.getElementById('btnIconWrapper');
@@ -512,16 +590,44 @@
       btn.disabled = true;
       icon.classList.add('hidden');
       spinner.classList.remove('hidden');
-      label.innerText = "Transmitting feedback...";
+      label.innerText = "Submitting review...";
 
       setTimeout(() => {
         document.getElementById('feedbackCard').classList.add('hidden');
         document.getElementById('wheelScreen').classList.remove('hidden');
         drawWheel();
-      }, 700);
+      }, 650);
     }
 
-    // Canvas Wheel Implementation
+    // ================= ANTI-DUPLICATE VISIT LOCKOUT =================
+    function getTodayLockoutKey() {
+      const today = new Date().toISOString().slice(0, 10);
+      return `serviette_lock_${storeKey}_${today}`;
+    }
+
+    function checkExistingVisit() {
+      if (params.get('reset') === '1') {
+        clearVisitLockout();
+        return;
+      }
+      const existing = localStorage.getItem(getTodayLockoutKey());
+      if (existing) {
+        const data = JSON.parse(existing);
+        document.getElementById('feedbackCard').classList.add('hidden');
+        document.getElementById('alreadySubmittedCard').classList.remove('hidden');
+        document.getElementById('lockedRewardName').innerText = data.reward || 'Free Perk';
+        document.getElementById('lockedRewardCode').innerText = data.voucher || 'SRV-CLAIMED';
+      }
+    }
+
+    function clearVisitLockout() {
+      localStorage.removeItem(getTodayLockoutKey());
+      window.location.href = window.location.pathname + `?venue=${storeKey}&table=${urlTable || '1'}`;
+    }
+
+    checkExistingVisit();
+
+    // ================= CANVAS WHEEL IMPLEMENTATION =================
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
     const colors = ["#F97316", "#EF4444", "#F59E0B", "#10B981", "#6366F1", "#EC4899"];
@@ -587,9 +693,17 @@
           document.getElementById('rewardBox').classList.remove('hidden');
           document.getElementById('spinBtn').classList.add('hidden');
 
+          // Record visit lockout in localStorage
+          localStorage.setItem(getTodayLockoutKey(), JSON.stringify({
+            reward: wonPrize,
+            voucher: generatedCode,
+            timestamp: new Date().toISOString()
+          }));
+
+          // Post to Google Sheet Backend
           const payload = {
             restaurant: store.name,
-            table: document.getElementById('tableInput').value,
+            table: tableSelect.value,
             server: chosenServer,
             q3_knowledge: ratings.q3,
             q4_attitude: ratings.q4,
@@ -614,7 +728,7 @@
     function copyCode() {
       const code = document.getElementById('codeDisplay').innerText;
       navigator.clipboard.writeText(code);
-      alert(`Voucher code ${code} copied to clipboard! Show it to your server before payment.`);
+      alert(`Voucher code ${code} copied! Show it to your server before payment.`);
     }
 
     function saveCodePrompt() {
