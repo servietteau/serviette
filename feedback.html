@@ -423,8 +423,8 @@
       <!-- PROMINENT SERVIETTE BOTTOM LOGO LINK ON REWARD PAGE -->
       <div class="pt-5 border-t border-amber-200/80 flex flex-col items-center justify-center gap-2">
         <a href="https://www.serviette.com.au" target="_blank" class="hover:scale-105 transition-transform" title="Discover Serviette.com.au">  
-         <div id="rewardPageLogoMount"></div>
           <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Powered by Service Intelligence</p>
+          <div id="rewardPageLogoMount"></div>
         </a>
       </div>
     </div>
@@ -468,9 +468,9 @@
       });
       
       // Wheel Centre Icon
- const wheelMount = document.getElementById('wheelCentreLogoMount');
+      const wheelMount = document.getElementById('wheelCentreLogoMount');
       if (wheelMount) {
-        wheelMount.innerHTML = 
+        wheelMount.innerHTML = `
           <svg class="w-12 h-12 sm:w-16 sm:h-16" viewBox="0 0 120 75" fill="none">
             <circle cx="68" cy="23" r="16" stroke="#0F172A" stroke-width="3" fill="#FFFFFF"/>
             <line x1="79" y1="34" x2="89" y2="44" stroke="#0F172A" stroke-width="4.5" stroke-linecap="round"/>
@@ -483,10 +483,10 @@
             <path d="M4 72L18 58L28 66L14 74H4V72Z" fill="#0F172A"/>
             <path d="M28 66L42 55C46 51 54 53 58 55L76 55C80 55 83 58 83 60C73 63 60 67 48 70L28 66Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="2.2"/>
           </svg>
-        ;
+        `;
       }
     }
-    mountLogos();  
+    mountLogos();
 
     // Multi-tenant Venues
     const RESTAURANTS = {
