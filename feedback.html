@@ -468,14 +468,25 @@
       });
       
       // Wheel Centre Icon
-   const wheelMount = document.getElementById('wheelCentreLogoMount');
-if (wheelMount) {
-  wheelMount.innerHTML = `
-    <div class="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-white flex items-center justify-center shadow-md">
-      <img src="logo.png" alt="Serviette logo" class="w-10 h-10 sm:w-14 sm:h-14 object-contain">
-    </div>
-  `;
-}
+ const wheelMount = document.getElementById('wheelCentreLogoMount');
+      if (wheelMount) {
+        wheelMount.innerHTML = 
+          <svg class="w-12 h-12 sm:w-16 sm:h-16" viewBox="0 0 120 75" fill="none">
+            <circle cx="68" cy="23" r="16" stroke="#0F172A" stroke-width="3" fill="#FFFFFF"/>
+            <line x1="79" y1="34" x2="89" y2="44" stroke="#0F172A" stroke-width="4.5" stroke-linecap="round"/>
+            <rect x="58" y="24" width="4" height="9" fill="#EA580C" rx="1"/>
+            <rect x="65" y="17" width="4" height="16" fill="#16A34A" rx="1"/>
+            <rect x="72" y="11" width="4" height="22" fill="#2563EB" rx="1"/>
+            <text x="68" y="47" font-family="'Playfair Display', serif" font-size="8" font-weight="700" fill="#0F172A" text-anchor="middle">SERVIETTE.</text>
+            <path d="M22 52H114C114 52 110 57 98 57H38C26 57 22 52 22 52Z" fill="#0F172A"/>
+            <line x1="18" y1="52" x2="118" y2="52" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M4 72L18 58L28 66L14 74H4V72Z" fill="#0F172A"/>
+            <path d="M28 66L42 55C46 51 54 53 58 55L76 55C80 55 83 58 83 60C73 63 60 67 48 70L28 66Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="2.2"/>
+          </svg>
+        ;
+      }
+    }
+    mountLogos();  
 
     // Multi-tenant Venues
     const RESTAURANTS = {
